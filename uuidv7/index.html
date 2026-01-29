@@ -84,6 +84,29 @@
             caret-color: var(--fg);
         }
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+        /* Style datetime-local as calendar icon button */
+        input[type="datetime-local"].calendar-btn {
+            position: relative;
+            color: transparent;
+            background: var(--bg);
+        }
+        input[type="datetime-local"].calendar-btn::-webkit-calendar-picker-indicator {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E") center/20px no-repeat;
+            opacity: 1;
+        }
+        .dark input[type="datetime-local"].calendar-btn::-webkit-calendar-picker-indicator {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3E%3C/svg%3E");
+        }
+        input[type="datetime-local"].calendar-btn:hover {
+            border-color: var(--fg);
+        }
         .toast-enter { animation: toastIn 0.2s ease-out; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         /* Scrollbar */
@@ -363,51 +386,48 @@
             <section id="panel-generate" role="tabpanel" aria-labelledby="tab-generate" class="tab-panel space-y-6 animate-in">
                 <article id="generator">
                     <div class="flex items-center justify-between mb-4 pb-4 border-b">
-                        <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-muted">Generator</p>
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-muted">Generator</p>
                         <div class="flex items-center border">
-                            <button onclick="setGenMode('random')" id="mode-random" class="mode-btn px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase bg-[var(--fg)] text-[var(--bg)]">Random</button>
-                            <button onclick="setGenMode('custom')" id="mode-custom" class="mode-btn px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase text-muted hover:text-[var(--fg)]">Custom</button>
+                            <button onclick="setGenMode('random')" id="mode-random" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase bg-[var(--fg)] text-[var(--bg)]">Random</button>
+                            <button onclick="setGenMode('custom')" id="mode-custom" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase text-muted hover:text-[var(--fg)]">Custom</button>
                         </div>
                     </div>
                     
                     <div id="customValues" class="hidden mb-6 p-4 border space-y-4">
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div class="space-y-2">
-                                <label for="customTimestamp" class="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">Timestamp</label>
+                                <label for="customTimestamp" class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Timestamp</label>
                                 <div class="flex gap-1">
-                                    <input type="text" id="customTimestamp" placeholder="2024-01-15T10:30:00Z" class="input flex-1 text-xs">
-                                    <input type="datetime-local" id="customTimestampPicker" class="hidden" onchange="syncFromPicker()" step="1">
-                                    <button onclick="document.getElementById('customTimestampPicker').showPicker()" class="btn btn-outline h-11 w-11 shrink-0" title="Calendar">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </button>
+                                    <input type="text" id="customTimestamp" placeholder="2024-01-15T10:30:00Z" class="input flex-1 text-sm" oninput="validateTimestampInput()">
+                                    <input type="datetime-local" id="customTimestampPicker" class="input h-11 w-11 shrink-0 calendar-btn" onchange="syncFromPicker()" step="1" title="Pick date">
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="setCurrentTime()" class="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Now</button>
-                                    <button onclick="setTimestamp(-3600000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1h</button>
-                                    <button onclick="setTimestamp(-86400000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1d</button>
-                                    <button onclick="setTimestamp(-604800000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1w</button>
+                                    <button onclick="setCurrentTime()" class="text-xs font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Now</button>
+                                    <button onclick="setTimestamp(-3600000)" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1h</button>
+                                    <button onclick="setTimestamp(-86400000)" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1d</button>
+                                    <button onclick="setTimestamp(-604800000)" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1w</button>
                                 </div>
-                                <p id="timestampError" class="text-[10px] text-red-500 hidden"></p>
-                                <p id="timestampPreview" class="text-[10px] text-muted hidden"></p>
+                                <p id="timestampError" class="text-xs text-red-500 hidden"></p>
+                                <p id="timestampPreview" class="text-xs text-muted hidden"></p>
                             </div>
                             <div class="space-y-2">
-                                <label for="customRandom" class="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">Random Bits (12 hex)</label>
-                                <input type="text" id="customRandom" placeholder="a1b2c3d4e5f6" maxlength="12" class="input w-full text-xs">
-                                <button onclick="generateRandomBits()" class="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Randomize</button>
+                                <label for="customRandom" class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Random Bits (19 hex)</label>
+                                <input type="text" id="customRandom" placeholder="a1b2c3d4e5f6a7b8c9d" maxlength="19" class="input w-full text-sm">
+                                <button onclick="generateRandomBits()" class="text-xs font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Randomize</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="flex items-center gap-3 mb-4">
-                        <label class="flex items-center gap-2 cursor-pointer text-xs group">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm group">
                             <input type="checkbox" id="monotonicMode" class="checkbox">
                             <span class="uppercase tracking-wider">Monotonic</span>
-                            <span class="text-muted text-[10px]">(sequential)</span>
+                            <span class="text-muted text-xs">(sequential)</span>
                         </label>
                     </div>
                     
-                    <button onclick="generateUUID()" class="btn btn-primary w-full h-11 text-xs">
-                        Generate UUIDv7 <kbd class="ml-2 px-1.5 py-0.5 bg-white/20 text-[10px] font-normal">⌘G</kbd>
+                    <button onclick="generateUUID()" class="btn btn-primary w-full h-11 text-sm">
+                        Generate UUIDv7 <kbd class="ml-2 px-1.5 py-0.5 bg-white/20 text-xs font-normal">⌘G</kbd>
                     </button>
                     
                     <div id="generatedResult" class="hidden mt-6 space-y-4">
@@ -438,8 +458,8 @@
                     </div>
                     <div class="flex gap-1">
                         <input type="number" id="batchCount" value="5" min="1" max="100" class="input w-16 text-sm text-center">
-                        <button onclick="generateBatch()" class="btn btn-outline h-11 px-4 text-xs flex-1 sm:flex-none">Generate Batch</button>
-                        <button onclick="copyToClipboard('batchUUIDs')" id="copyBatchBtn" class="hidden btn btn-outline h-11 px-4 text-xs">
+                        <button onclick="generateBatch()" class="btn btn-outline h-11 px-4 text-sm flex-1 sm:flex-none">Generate Batch</button>
+                        <button onclick="copyToClipboard('batchUUIDs')" id="copyBatchBtn" class="hidden btn btn-outline h-11 px-4 text-sm">
                             <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             Copy
                         </button>
@@ -703,6 +723,23 @@ const id = uuidv7();</pre></div></details>
             const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
             picker.value = local.toISOString().slice(0, 19);
         }
+        function openCalendarPicker() {
+            const picker = document.getElementById('customTimestampPicker');
+            // Set current value if there's a valid timestamp
+            const currentVal = document.getElementById('customTimestamp').value;
+            if (currentVal) {
+                const parsed = parseTimestampInput(currentVal);
+                if (parsed) syncToPicker(parsed);
+            } else {
+                syncToPicker(new Date());
+            }
+            // Try showPicker first, fallback to click
+            if (picker.showPicker) {
+                try { picker.showPicker(); } catch (e) { picker.click(); }
+            } else {
+                picker.click();
+            }
+        }
         function validateTimestampInput() {
             const input = document.getElementById('customTimestamp').value.trim();
             const errorEl = document.getElementById('timestampError');
@@ -744,11 +781,11 @@ const id = uuidv7();</pre></div></details>
             return null;
         }
         function generateRandomBits() {
-            const bytes = new Uint8Array(6);
+            const bytes = new Uint8Array(10); // 10 bytes = 20 hex chars, we use 19
             crypto.getRandomValues(bytes);
-            document.getElementById('customRandom').value = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('customRandom').value = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 19);
         }
-        function isCustomMode() { return document.getElementById('mode-custom').classList.contains('bg-[var(--bg)]'); }
+        function isCustomMode() { return document.getElementById('mode-custom').classList.contains('bg-[var(--fg)]'); }
         
         // Monotonic state
         let lastTimestamp = 0;
@@ -758,14 +795,15 @@ const id = uuidv7();</pre></div></details>
             const startTime = performance.now();
             let timestamp, randomHex;
             const isMonotonic = document.getElementById('monotonicMode').checked;
+            const customMode = isCustomMode();
             
-            if (isCustomMode()) {
+            if (customMode) {
                 const dateInput = document.getElementById('customTimestamp').value;
                 const randomInput = document.getElementById('customRandom').value.toLowerCase();
                 if (!dateInput) { showToast('Please enter a timestamp', 'error'); return; }
                 const parsed = parseTimestampInput(dateInput);
                 if (!parsed) { showToast('Invalid timestamp format', 'error'); return; }
-                if (!/^[0-9a-f]{12}$/i.test(randomInput)) { showToast('Random bits must be 12 hex chars', 'error'); return; }
+                if (!/^[0-9a-f]{19}$/i.test(randomInput)) { showToast('Random bits must be 19 hex chars', 'error'); return; }
                 timestamp = parsed.getTime();
                 randomHex = randomInput;
             } else {
@@ -780,7 +818,7 @@ const id = uuidv7();</pre></div></details>
                 crypto.getRandomValues(bytes);
                 randomHex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
             }
-            const uuid = createUUIDv7(timestamp, randomHex, isMonotonic ? monotonicCounter : null);
+            const uuid = createUUIDv7(timestamp, randomHex, isMonotonic ? monotonicCounter : null, customMode);
             const elapsed = performance.now() - startTime;
             document.getElementById('generatedUUID').value = uuid;
             document.getElementById('generatedUUIDHighlight').innerHTML = highlightUUID(uuid);
@@ -799,8 +837,18 @@ const id = uuidv7();</pre></div></details>
                    '<span class="text-rose-600 dark:text-rose-400">' + parts[4] + '</span>';
         }
         
-        function createUUIDv7(timestamp, randomHex, counter) {
+        function createUUIDv7(timestamp, randomHex, counter, useOnlyProvidedRandom = false) {
+            // UUIDv7 structure:
+            // 48 bits - timestamp (12 hex chars) -> part1 + part2
+            // 4 bits - version (always 7)
+            // 12 bits - rand_a (3 hex chars)
+            // 2 bits - variant (always 10)
+            // 62 bits - rand_b (first nibble modified for variant + 15 more nibbles)
+            // Total random needed: 3 + 16 = 19 hex chars
+            
             const tsHex = timestamp.toString(16).padStart(12, '0');
+            
+            // rand_a: 12 bits (3 hex chars) - chars 0-2 of randomHex
             let randA;
             if (counter !== null) {
                 // Monotonic: use counter in rand_a
@@ -808,17 +856,31 @@ const id = uuidv7();</pre></div></details>
             } else {
                 randA = randomHex.substring(0, 3);
             }
-            const randBFirst = randomHex.substring(3, 4);
-            const randBRest = randomHex.substring(4);
-            const extraBytes = new Uint8Array(8);
-            crypto.getRandomValues(extraBytes);
-            const extraHex = Array.from(extraBytes).map(b => b.toString(16).padStart(2, '0')).join('');
-            const part1 = tsHex.substring(0, 8);
-            const part2 = tsHex.substring(8, 12);
-            const part3 = '7' + randA;
-            const variantNibble = (parseInt(randBFirst, 16) & 0x3) | 0x8;
-            const part4 = variantNibble.toString(16) + randBRest + extraHex.substring(0, 2);
-            const part5 = extraHex.substring(2, 14);
+            
+            // rand_b: chars 3-18 of randomHex (16 chars)
+            let allRandB;
+            if (useOnlyProvidedRandom) {
+                // Custom mode: use exactly the provided random (chars 3-18)
+                allRandB = randomHex.substring(3, 19);
+            } else {
+                // Normal mode: randomHex is only 12 chars, generate more
+                const randFromInput = randomHex.substring(3, 12); // 9 hex chars
+                const extraBytes = new Uint8Array(4);
+                crypto.getRandomValues(extraBytes);
+                const extraHex = Array.from(extraBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+                allRandB = (randFromInput + extraHex).substring(0, 16);
+            }
+            
+            // First nibble of rand_b needs variant bits (10xx) - preserves lower 2 bits
+            const firstNibble = (parseInt(allRandB.charAt(0), 16) & 0x3) | 0x8;
+            
+            // Build the UUID parts
+            const part1 = tsHex.substring(0, 8);        // 8 chars - timestamp high
+            const part2 = tsHex.substring(8, 12);       // 4 chars - timestamp low
+            const part3 = '7' + randA;                   // 4 chars - version + rand_a
+            const part4 = firstNibble.toString(16) + allRandB.substring(1, 4); // 4 chars - variant + rand_b part
+            const part5 = allRandB.substring(4, 16);    // 12 chars - rand_b rest
+            
             return part1 + '-' + part2 + '-' + part3 + '-' + part4 + '-' + part5;
         }
         // Store last generated timestamp for regenerate
