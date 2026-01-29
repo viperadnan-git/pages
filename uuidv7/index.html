@@ -16,6 +16,11 @@
     <meta property="og:url" content="https://viperadnan.com/pages/uuidv7">
     <meta property="og:title" content="UUIDv7 Generator & Parser - Free Online Tool">
     <meta property="og:description" content="Generate time-ordered UUIDs, parse any UUID version to extract timestamps. Free, fast, and RFC 9562 compliant.">
+    <meta property="og:image" content="https://api.microlink.io/?url=https://viperadnan.com/pages/uuidv7&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="UUIDv7 Generator & Parser - Free online tool for time-ordered UUIDs">
     <meta property="og:site_name" content="UUIDv7 Tools">
     <meta property="og:locale" content="en_US">
     
@@ -23,6 +28,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="UUIDv7 Generator & Parser - Free Online Tool">
     <meta name="twitter:description" content="Generate time-ordered UUIDs, parse any UUID version to extract timestamps. Free, fast, and RFC 9562 compliant.">
+    <meta name="twitter:image" content="https://api.microlink.io/?url=https://viperadnan.com/pages/uuidv7&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta name="twitter:image:alt" content="UUIDv7 Generator & Parser - Free online tool for time-ordered UUIDs">
     <meta name="twitter:creator" content="@AK47_07">
     
     <!-- Additional SEO -->
@@ -32,6 +39,8 @@
     <meta name="format-detection" content="telephone=no">
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🆔</text></svg>">
+    <link rel="preconnect" href="https://api.microlink.io" crossorigin>
+    <link rel="dns-prefetch" href="https://api.microlink.io">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,6 +52,8 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Space Grotesk', 'system-ui', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+                    borderColor: { DEFAULT: 'var(--border)' },
+                    divideColor: { DEFAULT: 'var(--border)' },
                 }
             }
         }
@@ -663,15 +674,16 @@ const id = uuidv7();</pre></div></details>
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         }
-        // Initialize theme - default to light, respect saved preference
+        // Initialize theme - respect saved preference, otherwise follow system
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else if (savedTheme === 'light') {
                 document.documentElement.classList.remove('dark');
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
             }
-            // If no saved preference, default is light (no class needed)
         })();
         
         function switchTab(tab) {
@@ -1155,7 +1167,30 @@ const id = uuidv7();</pre></div></details>
                 parseUUID();
             }
         });
-        document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function(e) { e.preventDefault(); document.querySelector(this.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' }); }));
+        // Navbar links: switch tab then scroll to section
+        const hashToTab = { '#generator': 'generate', '#parser': 'parse', '#docs': 'info' };
+        document.querySelectorAll('header a[href="#generator"], header a[href="#parser"], header a[href="#docs"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const hash = this.getAttribute('href');
+                const tab = hashToTab[hash];
+                if (tab) {
+                    switchTab(tab);
+                    const el = document.querySelector(hash);
+                    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+                }
+            });
+        });
+        // Other anchor links: just smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            if (a.closest('header')) return;
+            a.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#main-content') return;
+                e.preventDefault();
+                document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
     </script>
 </body>
 </html>
