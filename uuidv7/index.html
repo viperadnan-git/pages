@@ -320,7 +320,7 @@
 <body class="min-h-screen font-sans antialiased">
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
-    <div class="min-h-screen">
+    <div class="min-h-screen flex flex-col">
         <header class="sticky top-0 z-40 bg-[var(--bg)] border-b">
             <div class="max-w-3xl mx-auto px-6 h-12 flex items-center justify-between">
                 <a href="/" class="flex items-center gap-2 hover:opacity-70 transition-opacity">
@@ -345,7 +345,7 @@
                 </div>
             </div>
         </header>
-        <main id="main-content" class="max-w-3xl mx-auto px-6 py-12">
+        <main id="main-content" class="flex-1 max-w-3xl mx-auto px-6 py-12 w-full">
             <!-- Hero -->
             <section class="mb-12 animate-in">
                 <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-muted mb-3">RFC 9562</p>
@@ -422,7 +422,7 @@
                                 <button onclick="shareUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0" title="Share">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                                 </button>
-                                <button onclick="generateUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0" title="Regenerate (⌘G)">
+                                <button onclick="regenerateUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0" title="Regenerate with same timestamp">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                 </button>
                             </div>
@@ -467,6 +467,9 @@
                         <button onclick="pasteAndParse()" class="btn btn-primary h-[52px] px-5 text-xs flex items-center gap-2">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                             Paste
+                        </button>
+                        <button id="shareParseBtn" onclick="shareParseUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0 hidden" title="Share">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                         </button>
                     </div>
                     <p class="text-xs text-muted uppercase tracking-wider mb-6">Supports V1, V4, V6, V7 · Auto-parses · <kbd class="px-1 py-0.5 bg-subtle border text-[10px]">⌘V</kbd> to paste</p>
@@ -614,7 +617,7 @@ const id = uuidv7();</pre></div></details>
             </section>
         </main>
         
-        <footer class="border-t mt-16">
+        <footer class="border-t mt-auto">
             <div class="max-w-3xl mx-auto px-6 py-6">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted uppercase tracking-widest">
                     <div class="flex items-center gap-2">
@@ -818,11 +821,33 @@ const id = uuidv7();</pre></div></details>
             const part5 = extraHex.substring(2, 14);
             return part1 + '-' + part2 + '-' + part3 + '-' + part4 + '-' + part5;
         }
+        // Store last generated timestamp for regenerate
+        let lastGeneratedTimestamp = null;
         function showBreakdown(uuid, timestamp, elapsed) {
+            lastGeneratedTimestamp = timestamp;
             const date = new Date(timestamp);
             const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
+            const localDate = date.toLocaleString();
             const perfText = elapsed !== undefined ? elapsed.toFixed(3) + 'ms' : '';
-            document.getElementById('generatedBreakdown').innerHTML = '<div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Timestamp</div><div class="text-sm break-all">' + date.toISOString() + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Created</div><div class="text-sm font-bold">' + rel + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Version</div><div class="text-sm font-bold">7</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">' + (perfText ? 'Time' : 'Variant') + '</div><div class="text-sm font-bold">' + (perfText || 'RFC 4122') + '</div></div>';
+            document.getElementById('generatedBreakdown').innerHTML = '<div class="p-3 bg-[var(--bg)] col-span-2 sm:col-span-2"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Timestamp</div><div class="text-sm break-all">' + date.toISOString() + '</div><div class="text-xs text-muted mt-1">' + localDate + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Created</div><div class="text-sm font-bold">' + rel + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">' + (perfText ? 'Time' : 'Version') + '</div><div class="text-sm font-bold">' + (perfText || '7') + '</div></div>';
+        }
+        // Regenerate UUID with same timestamp but new random bits
+        function regenerateUUID() {
+            if (!lastGeneratedTimestamp) {
+                generateUUID();
+                return;
+            }
+            const startTime = performance.now();
+            const timestamp = lastGeneratedTimestamp;
+            const bytes = new Uint8Array(6);
+            crypto.getRandomValues(bytes);
+            const randomHex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            const uuid = createUUIDv7(timestamp, randomHex, null);
+            const elapsed = performance.now() - startTime;
+            document.getElementById('generatedUUID').value = uuid;
+            document.getElementById('generatedUUIDHighlight').innerHTML = highlightUUID(uuid);
+            document.getElementById('generatedResult').classList.remove('hidden');
+            showBreakdown(uuid, timestamp, elapsed);
         }
         function generateBatch() {
             const count = Math.min(100, Math.max(1, parseInt(document.getElementById('batchCount').value) || 5));
@@ -888,9 +913,10 @@ const id = uuidv7();</pre></div></details>
                 const timestamp = parseInt(clean.substring(0, 12), 16);
                 const date = new Date(timestamp);
                 const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
+                const localDate = date.toLocaleString();
                 const randA = clean.substring(13, 16);
                 const randB = clean.substring(17);
-                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-2 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted break-all">Unix ms: ' + timestamp.toLocaleString() + '</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
+                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-1 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted mb-1">' + localDate + '</div><div class="text-xs text-muted break-all">Unix ms: ' + timestamp.toLocaleString() + '</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
                 document.getElementById('parsedTimestampValue').textContent = date.toISOString();
                 document.getElementById('parsedRandom').innerHTML = '<div class="grid grid-cols-2 gap-4"><div><span class="text-muted text-xs font-bold uppercase tracking-wider">rand_a</span><div class="font-mono text-base mt-1 break-all">' + randA + '</div></div><div><span class="text-muted text-xs font-bold uppercase tracking-wider">rand_b</span><div class="font-mono text-base mt-1 break-all">' + randB + '</div></div></div>';
                 document.getElementById('parsedRandomValue').textContent = randA + randB;
@@ -904,7 +930,8 @@ const id = uuidv7();</pre></div></details>
                 const unixMs = Number(unixNs / BigInt(10000));
                 const date = new Date(unixMs);
                 const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
-                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-2 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted">Gregorian 100ns intervals</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
+                const localDate = date.toLocaleString();
+                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-1 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted mb-1">' + localDate + '</div><div class="text-xs text-muted">Gregorian 100ns intervals</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
                 document.getElementById('parsedTimestampValue').textContent = date.toISOString();
                 const clockSeq = clean.substring(17, 21);
                 const node = clean.substring(21);
@@ -1006,7 +1033,10 @@ const id = uuidv7();</pre></div></details>
         function handleParseInput() {
             const input = document.getElementById('parseInput');
             const clearBtn = document.getElementById('clearParseBtn');
-            clearBtn.classList.toggle('hidden', !input.value.trim());
+            const shareBtn = document.getElementById('shareParseBtn');
+            const hasValue = input.value.trim();
+            clearBtn.classList.toggle('hidden', !hasValue);
+            shareBtn.classList.toggle('hidden', !hasValue);
             parseUUID();
         }
         // Clear parse input
@@ -1016,7 +1046,19 @@ const id = uuidv7();</pre></div></details>
             document.getElementById('clearParseBtn').classList.add('hidden');
             document.getElementById('validationStatus').classList.add('hidden');
             document.getElementById('parseResult').classList.add('hidden');
+            document.getElementById('shareParseBtn').classList.add('hidden');
             input.focus();
+        }
+        // Share parsed UUID
+        function shareParseUUID() {
+            const uuid = document.getElementById('parseInput').value.trim();
+            if (!uuid) return;
+            const url = window.location.origin + window.location.pathname + '?uuid=' + encodeURIComponent(uuid);
+            if (navigator.share) {
+                navigator.share({ title: 'UUID Parser', text: uuid, url: url }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url).then(() => showToast('Share link copied', 'success')).catch(() => showToast('Failed to copy', 'error'));
+            }
         }
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -1046,6 +1088,7 @@ const id = uuidv7();</pre></div></details>
             if (uuidParam) {
                 document.getElementById('parseInput').value = uuidParam;
                 document.getElementById('clearParseBtn').classList.remove('hidden');
+                document.getElementById('shareParseBtn').classList.remove('hidden');
                 switchTab('parse');
                 parseUUID();
             }
