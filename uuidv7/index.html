@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUIDv7 Generator & Parser - Free Online Tool | Generate Time-Ordered UUIDs</title>
+    <meta name="description" content="Free online UUIDv7 generator and parser tool. Generate time-ordered UUIDs, parse any UUID version (v1, v4, v6, v7) to extract timestamps, and learn about RFC 9562 specification. Includes batch generation, monotonic mode, and syntax highlighting.">
+    <meta name="keywords" content="UUIDv7, UUID generator, UUID parser, time-ordered UUID, RFC 9562, unique identifier, distributed systems, UUIDv4, UUIDv1, GUID, batch UUID, monotonic UUID">
+    <meta name="author" content="Adnan Ahmad">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://viperadnan.com/pages/uuidv7">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://viperadnan.com/pages/uuidv7">
+    <meta property="og:title" content="UUIDv7 Generator & Parser - Free Online Tool">
+    <meta property="og:description" content="Generate time-ordered UUIDs, parse any UUID version to extract timestamps. Free, fast, and RFC 9562 compliant.">
+    <meta property="og:site_name" content="UUIDv7 Tools">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UUIDv7 Generator & Parser - Free Online Tool">
+    <meta name="twitter:description" content="Generate time-ordered UUIDs, parse any UUID version to extract timestamps. Free, fast, and RFC 9562 compliant.">
+    <meta name="twitter:creator" content="@AK47_07">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="color-scheme" content="light dark">
+    <meta name="format-detection" content="telephone=no">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🆔</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Space Grotesk', 'system-ui', 'sans-serif'], mono: ['Space Mono', 'monospace'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --bg-secondary: #F5F5F5;
+            --fg: #000000;
+            --fg-muted: #666666;
+            --border: #E0E0E0;
+            --accent: #FF5722;
+            --accent-fg: #FFFFFF;
+        }
+        .dark {
+            --bg: #000000;
+            --bg-secondary: #111111;
+            --fg: #FFFFFF;
+            --fg-muted: #888888;
+            --border: #333333;
+            --accent: #FF5722;
+            --accent-fg: #FFFFFF;
+        }
+        * { border-color: var(--border); }
+        body { background: var(--bg); color: var(--fg); }
+        ::selection { background: var(--accent); color: var(--accent-fg); }
+        .animate-in { animation: animateIn 0.3s ease-out; }
+        @keyframes animateIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input, textarea, select { background: var(--bg); color: var(--fg); border-color: var(--border); }
+        input::placeholder, textarea::placeholder { color: var(--fg-muted); }
+        input:focus, textarea:focus, select:focus, button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+        /* Fix browser autofill background */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px var(--bg) inset !important;
+            -webkit-text-fill-color: var(--fg) !important;
+            caret-color: var(--fg);
+        }
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+        .toast-enter { animation: toastIn 0.2s ease-out; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--fg-muted); }
+        /* Card style */
+        .card { background: var(--bg); border: 1px solid var(--border); }
+        .card-elevated { background: var(--bg); border: 1px solid var(--border); }
+        /* Button styles */
+        .btn { display: inline-flex; align-items: center; justify-content: center; font-weight: 500; transition: all 0.1s ease; text-transform: uppercase; letter-spacing: 0.05em; font-size: 12px; }
+        .btn-primary { background: var(--accent); color: var(--accent-fg); }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-ghost { background: transparent; color: var(--fg); }
+        .btn-ghost:hover { background: var(--bg-secondary); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--fg); }
+        .btn-outline:hover { border-color: var(--fg); }
+        /* Input styles */
+        .input { border: 1px solid var(--border); border-radius: 0; padding: 0 12px; height: 44px; transition: border-color 0.1s; font-family: 'Space Mono', monospace; }
+        .input:hover { border-color: var(--fg-muted); }
+        .input:focus { border-color: var(--accent); }
+        .input-lg { height: 52px; font-size: 14px; }
+        /* Tag/badge */
+        .tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; border: 1px solid var(--border); }
+        /* Subtle backgrounds */
+        .bg-subtle { background: var(--bg-secondary); }
+        .text-muted { color: var(--fg-muted); }
+        .border-subtle { border-color: var(--border); }
+        /* Smooth transitions */
+        * { transition-property: background-color, border-color, color, opacity; transition-duration: 0.1s; }
+        a, button, input, textarea { transition-duration: 0.1s; }
+        /* Custom checkbox */
+        .checkbox { 
+            appearance: none; 
+            width: 16px; 
+            height: 16px; 
+            border: 1px solid var(--border); 
+            border-radius: 0; 
+            background: var(--bg); 
+            cursor: pointer;
+            position: relative;
+            transition: all 0.1s ease;
+        }
+        .checkbox:hover { border-color: var(--fg); }
+        .checkbox:checked { 
+            background: var(--accent); 
+            border-color: var(--accent); 
+        }
+        .checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 9px;
+            border: solid var(--accent-fg);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .checkbox:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+        /* TE-style labels */
+        .label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); }
+        hr { border-color: var(--border); }
+        /* Better focus indicators */
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        /* Skip link */
+        .skip-link { position: absolute; top: -40px; left: 0; background: var(--accent); color: var(--accent-fg); padding: 8px 16px; z-index: 100; font-size: 14px; font-weight: 500; }
+        .skip-link:focus { top: 0; }
+        /* Copy tooltip */
+        .copy-tooltip { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 4px 8px; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+        .copy-tooltip.show { opacity: 1; }
+        /* Clear button */
+        .clear-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); padding: 4px; opacity: 0.5; transition: opacity 0.1s; }
+        .clear-btn:hover { opacity: 1; }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "UUIDv7 Generator & Parser",
+          "description": "Free online tool to generate and parse UUIDv7 identifiers per RFC 9562. Supports batch generation, monotonic mode, and parsing of v1, v4, v6, v7 UUIDs.",
+          "url": "https://viperadnan.com/pages/uuidv7",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "Any",
+          "browserRequirements": "Requires JavaScript",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Adnan Ahmad",
+            "url": "https://viperadnan.com"
+          },
+          "featureList": [
+            "Generate UUIDv7 with timestamps",
+            "Parse UUID v1, v4, v6, v7",
+            "Batch generation up to 100 UUIDs",
+            "Monotonic counter mode",
+            "Custom timestamp support",
+            "Syntax highlighted output",
+            "Dark mode support",
+            "Share via URL"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I generate a UUIDv7 in JavaScript?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Use the uuid npm package: import { v7 as uuidv7 } from 'uuid'; const id = uuidv7();"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I extract the timestamp from a UUIDv7?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! The first 48 bits contain a Unix timestamp in milliseconds. Use our parser tool to extract it instantly."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is UUIDv7 better than UUIDv4?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For database primary keys, yes—UUIDv7 offers better index performance and timestamp extraction. UUIDv4 remains suitable when ordering doesn't matter."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can UUIDv7 be used as a database primary key?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely! UUIDv7 is ideal for primary keys. Its time-ordered nature means new records are inserted at the end of B-tree indexes, avoiding page splits and improving write performance."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long until UUIDv7 timestamps overflow?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The 48-bit timestamp will overflow around the year 10889 AD (over 8,800 years from now), calculated from 2^48 milliseconds from Unix epoch (1970)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is monotonic UUIDv7?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Monotonic UUIDv7 ensures strict ordering even when multiple UUIDs are generated within the same millisecond. Instead of random bits, a counter increments in the rand_a field."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What RFC defines UUIDv7?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "RFC 9562, published May 2024, superseding RFC 4122."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://viperadnan.com"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Pages",
+              "item": "https://viperadnan.com/pages"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "UUIDv7 Generator",
+              "item": "https://viperadnan.com/pages/uuidv7"
+            }
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "name": "How to Generate a UUIDv7",
+          "description": "Generate a time-ordered UUIDv7 identifier using this free online tool or programmatically in JavaScript.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "name": "Open the generator",
+              "text": "Navigate to the UUIDv7 Generator tool and ensure you're on the Generate tab."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Choose generation mode",
+              "text": "Select Random mode for automatic generation, or Custom mode to specify a timestamp and random bits."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Enable monotonic mode (optional)",
+              "text": "Check the Monotonic checkbox if you need strictly sequential UUIDs within the same millisecond."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Generate the UUID",
+              "text": "Click Generate UUIDv7 or press Ctrl+G (Cmd+G on Mac) to create your UUID."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Copy the result",
+              "text": "Click the generated UUID to copy it to your clipboard."
+            }
+          ],
+          "tool": {
+            "@type": "HowToTool",
+            "name": "UUIDv7 Generator Web Tool"
+          }
+        }
+      ]
+    }
+    </script>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+    <div class="min-h-screen">
+        <header class="sticky top-0 z-40 bg-[var(--bg)] border-b">
+            <div class="max-w-3xl mx-auto px-6 h-12 flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <div class="w-6 h-6 bg-[var(--accent)] flex items-center justify-center">
+                        <span class="text-[var(--accent-fg)] text-[10px] font-bold">V7</span>
+                    </div>
+                    <span class="text-xs font-bold tracking-widest uppercase">UUIDv7</span>
+                </a>
+                <div class="flex items-center gap-1">
+                    <nav class="hidden sm:flex items-center gap-1 mr-2">
+                        <a href="#generator" class="px-3 py-1.5 text-sm text-muted hover:text-[var(--fg)] transition-colors">Generate</a>
+                        <a href="#parser" class="px-3 py-1.5 text-sm text-muted hover:text-[var(--fg)] transition-colors">Parse</a>
+                        <a href="#docs" class="px-3 py-1.5 text-sm text-muted hover:text-[var(--fg)] transition-colors">Docs</a>
+                    </nav>
+                    <a href="https://github.com/viperadnan-git/pages/tree/main/uuidv7" target="_blank" rel="noopener noreferrer" class="btn btn-ghost w-9 h-9 rounded-none" title="View on GitHub">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <button onclick="toggleTheme()" class="btn btn-ghost w-9 h-9 rounded-none" title="Toggle theme">
+                        <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main id="main-content" class="max-w-3xl mx-auto px-6 py-12">
+            <!-- Hero -->
+            <section class="mb-12 animate-in">
+                <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-muted mb-3">RFC 9562</p>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3 leading-tight uppercase">UUIDv7 Generator<br class="sm:hidden"> & Parser</h1>
+                <p class="text-muted text-sm leading-relaxed max-w-lg">Generate time-ordered unique identifiers, parse existing UUIDs, and extract embedded timestamps.</p>
+            </section>
+            <!-- Tabs -->
+            <nav class="flex gap-0 mb-8 border-b -mx-1 px-1" role="tablist" aria-label="UUID Tools">
+                <button onclick="switchTab('generate')" id="tab-generate" role="tab" aria-selected="true" aria-controls="panel-generate" class="tab-btn px-4 py-2 text-[11px] font-bold tracking-widest uppercase border-b-2 border-[var(--accent)] text-[var(--fg)] -mb-px">Generate</button>
+                <button onclick="switchTab('parse')" id="tab-parse" role="tab" aria-selected="false" aria-controls="panel-parse" class="tab-btn px-4 py-2 text-[11px] font-bold tracking-widest uppercase border-b-2 border-transparent text-muted hover:text-[var(--fg)] -mb-px">Parse</button>
+                <button onclick="switchTab('info')" id="tab-info" role="tab" aria-selected="false" aria-controls="panel-info" class="tab-btn px-4 py-2 text-[11px] font-bold tracking-widest uppercase border-b-2 border-transparent text-muted hover:text-[var(--fg)] -mb-px">Docs</button>
+            </nav>
+
+            <!-- Generate Tab -->
+            <section id="panel-generate" role="tabpanel" aria-labelledby="tab-generate" class="tab-panel space-y-6 animate-in">
+                <article id="generator">
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b">
+                        <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-muted">Generator</p>
+                        <div class="flex items-center border">
+                            <button onclick="setGenMode('random')" id="mode-random" class="mode-btn px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase bg-[var(--fg)] text-[var(--bg)]">Random</button>
+                            <button onclick="setGenMode('custom')" id="mode-custom" class="mode-btn px-3 py-1.5 text-[10px] font-bold tracking-wider uppercase text-muted hover:text-[var(--fg)]">Custom</button>
+                        </div>
+                    </div>
+                    
+                    <div id="customValues" class="hidden mb-6 p-4 border space-y-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label for="customTimestamp" class="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">Timestamp</label>
+                                <div class="flex gap-1">
+                                    <input type="text" id="customTimestamp" placeholder="2024-01-15T10:30:00Z" class="input flex-1 text-xs">
+                                    <input type="datetime-local" id="customTimestampPicker" class="hidden" onchange="syncFromPicker()" step="1">
+                                    <button onclick="document.getElementById('customTimestampPicker').showPicker()" class="btn btn-outline h-11 w-11 shrink-0" title="Calendar">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    </button>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="setCurrentTime()" class="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Now</button>
+                                    <button onclick="setTimestamp(-3600000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1h</button>
+                                    <button onclick="setTimestamp(-86400000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1d</button>
+                                    <button onclick="setTimestamp(-604800000)" class="text-[10px] uppercase tracking-wider text-muted hover:text-[var(--accent)]">-1w</button>
+                                </div>
+                                <p id="timestampError" class="text-[10px] text-red-500 hidden"></p>
+                                <p id="timestampPreview" class="text-[10px] text-muted hidden"></p>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="customRandom" class="text-[10px] font-bold tracking-[0.15em] uppercase text-muted">Random Bits (12 hex)</label>
+                                <input type="text" id="customRandom" placeholder="a1b2c3d4e5f6" maxlength="12" class="input w-full text-xs">
+                                <button onclick="generateRandomBits()" class="text-[10px] font-bold uppercase tracking-wider text-muted hover:text-[var(--accent)]">Randomize</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer text-xs group">
+                            <input type="checkbox" id="monotonicMode" class="checkbox">
+                            <span class="uppercase tracking-wider">Monotonic</span>
+                            <span class="text-muted text-[10px]">(sequential)</span>
+                        </label>
+                    </div>
+                    
+                    <button onclick="generateUUID()" class="btn btn-primary w-full h-11 text-xs">
+                        Generate UUIDv7 <kbd class="ml-2 px-1.5 py-0.5 bg-white/20 text-[10px] font-normal">⌘G</kbd>
+                    </button>
+                    
+                    <div id="generatedResult" class="hidden mt-6 space-y-4">
+                        <div class="space-y-2">
+                            <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Output</p>
+                            <div class="flex gap-1">
+                                <div id="uuidDisplayContainer" onclick="copyUUIDWithTooltip()" class="input input-lg flex-1 bg-subtle flex items-center cursor-pointer hover:border-[var(--fg)] transition-colors min-w-0 relative" title="Click to copy">
+                                    <span id="generatedUUIDHighlight" class="text-sm sm:text-base break-all"></span>
+                                    <span id="copyTooltip" class="copy-tooltip">Copied!</span>
+                                </div>
+                                <input type="hidden" id="generatedUUID">
+                                <button onclick="shareUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0" title="Share">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                                </button>
+                                <button onclick="generateUUID()" class="btn btn-outline h-[52px] w-[52px] shrink-0" title="Regenerate (⌘G)">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="generatedBreakdown" class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[var(--border)]"></div>
+                    </div>
+                </article>
+                
+                <div class="border-t pt-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-muted">Batch</p>
+                        <span id="batchPerf" class="text-xs tracking-wider text-muted hidden"></span>
+                    </div>
+                    <div class="flex gap-1">
+                        <input type="number" id="batchCount" value="5" min="1" max="100" class="input w-16 text-sm text-center">
+                        <button onclick="generateBatch()" class="btn btn-outline h-11 px-4 text-xs flex-1 sm:flex-none">Generate Batch</button>
+                        <button onclick="copyToClipboard('batchUUIDs')" id="copyBatchBtn" class="hidden btn btn-outline h-11 px-4 text-xs">
+                            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <div id="batchResult" class="hidden mt-3">
+                        <textarea id="batchUUIDs" readonly rows="5" class="w-full border bg-subtle px-3 py-2 text-sm resize-none"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parse Tab -->
+            <section id="panel-parse" role="tabpanel" aria-labelledby="tab-parse" class="tab-panel hidden animate-in">
+                <article id="parser">
+                    <div class="mb-4 pb-4 border-b">
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-muted">Parser</p>
+                    </div>
+                    
+                    <div class="flex gap-1 mb-2">
+                        <div class="relative flex-1">
+                            <input type="text" id="parseInput" placeholder="Paste UUID here..." class="input input-lg w-full text-sm pr-10" oninput="handleParseInput()">
+                            <button id="clearParseBtn" onclick="clearParseInput()" class="clear-btn hidden" title="Clear">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        <button onclick="pasteAndParse()" class="btn btn-primary h-[52px] px-5 text-xs flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            Paste
+                        </button>
+                    </div>
+                    <p class="text-xs text-muted uppercase tracking-wider mb-6">Supports V1, V4, V6, V7 · Auto-parses · <kbd class="px-1 py-0.5 bg-subtle border text-[10px]">⌘V</kbd> to paste</p>
+                    
+                    <div id="validationStatus" class="hidden mb-4"></div>
+                    
+                    <div id="parseResult" class="hidden space-y-px bg-[var(--border)]">
+                        <div class="p-4 bg-[var(--bg)]">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Timestamp</p>
+                                <button onclick="copyField('parsedTimestampValue')" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">Copy</button>
+                            </div>
+                            <div id="parsedTimestamp"></div>
+                            <span id="parsedTimestampValue" class="hidden"></span>
+                        </div>
+                        
+                        <div class="grid sm:grid-cols-2 gap-px">
+                            <div class="p-4 bg-[var(--bg)]">
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Version</p>
+                                    <button onclick="copyField('parsedVersionValue')" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">Copy</button>
+                                </div>
+                                <div id="parsedVersion" class="text-2xl font-bold"></div>
+                                <span id="parsedVersionValue" class="hidden"></span>
+                            </div>
+                            <div class="p-4 bg-[var(--bg)]">
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Variant</p>
+                                    <button onclick="copyField('parsedVariantValue')" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">Copy</button>
+                                </div>
+                                <div id="parsedVariant" class="text-base font-medium"></div>
+                                <span id="parsedVariantValue" class="hidden"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-[var(--bg)]">
+                            <div class="flex items-center justify-between mb-2">
+                                <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted">Random Data</p>
+                                <button onclick="copyField('parsedRandomValue')" class="text-xs uppercase tracking-wider text-muted hover:text-[var(--accent)]">Copy</button>
+                            </div>
+                            <div id="parsedRandom" class="text-sm"></div>
+                            <span id="parsedRandomValue" class="hidden"></span>
+                        </div>
+                        
+                        <div class="p-4 bg-[var(--bg)]">
+                            <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted mb-3">Structure</p>
+                            <div id="parsedStructure"></div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Info Tab -->
+            <section id="panel-info" role="tabpanel" aria-labelledby="tab-info" class="tab-panel hidden animate-in space-y-8">
+                <article id="docs">
+                    <div class="mb-4 pb-4 border-b">
+                        <p class="text-xs font-bold tracking-[0.2em] uppercase text-muted">Documentation</p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h2 class="text-base font-bold uppercase tracking-wider mb-3">What is UUIDv7?</h2>
+                        <p class="text-sm text-muted leading-relaxed">UUIDv7 is a time-ordered UUID format defined in <a href="https://www.rfc-editor.org/rfc/rfc9562" target="_blank" rel="noopener noreferrer" class="text-[var(--accent)] hover:underline">RFC 9562</a>. It combines a Unix timestamp in milliseconds with cryptographically random data to create sortable, unique identifiers ideal for distributed systems and databases.</p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted mb-3">Structure (128 bits)</p>
+                        <div class="border">
+                            <table class="w-full text-sm">
+                                <thead><tr class="border-b bg-subtle"><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Field</th><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Bits</th><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Description</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-b"><td class="py-2.5 px-3 font-mono">unix_ts_ms</td><td class="py-2.5 px-3 text-muted">48</td><td class="py-2.5 px-3 text-muted">Unix timestamp (ms)</td></tr>
+                                    <tr class="border-b"><td class="py-2.5 px-3 font-mono">ver</td><td class="py-2.5 px-3 text-muted">4</td><td class="py-2.5 px-3 text-muted">Version (7)</td></tr>
+                                    <tr class="border-b"><td class="py-2.5 px-3 font-mono">rand_a</td><td class="py-2.5 px-3 text-muted">12</td><td class="py-2.5 px-3 text-muted">Random data</td></tr>
+                                    <tr class="border-b"><td class="py-2.5 px-3 font-mono">var</td><td class="py-2.5 px-3 text-muted">2</td><td class="py-2.5 px-3 text-muted">Variant (10)</td></tr>
+                                    <tr><td class="py-2.5 px-3 font-mono">rand_b</td><td class="py-2.5 px-3 text-muted">62</td><td class="py-2.5 px-3 text-muted">Random data</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border">
+                        <p class="text-xs font-bold tracking-[0.15em] uppercase text-muted mb-3">Visual Format</p>
+                        <div class="text-sm sm:text-base py-3 text-center overflow-x-auto font-mono">
+                            <span class="text-sky-600 dark:text-sky-400">xxxxxxxx</span><span class="text-muted">-</span><span class="text-sky-600 dark:text-sky-400">xxxx</span><span class="text-muted">-</span><span class="text-[var(--accent)] font-bold">7</span><span class="text-amber-600 dark:text-amber-400">xxx</span><span class="text-muted">-</span><span class="text-emerald-600 dark:text-emerald-400 font-bold">y</span><span class="text-rose-600 dark:text-rose-400">xxx</span><span class="text-muted">-</span><span class="text-rose-600 dark:text-rose-400">xxxxxxxxxxxx</span>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-4 text-xs uppercase tracking-wider mt-2">
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-sky-500"></span>timestamp</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-[var(--accent)]"></span>version</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-amber-500"></span>rand_a</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-emerald-500"></span>variant</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-rose-500"></span>rand_b</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <div class="border-t pt-8">
+                    <h2 class="text-base font-bold uppercase tracking-wider mb-4">Benefits</h2>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div class="p-4 border">
+                            <h3 class="text-xs font-bold uppercase tracking-wider mb-1">Time-Ordered</h3>
+                            <p class="text-sm text-muted leading-relaxed">UUIDs sort chronologically for efficient indexing.</p>
+                        </div>
+                        <div class="p-4 border">
+                            <h3 class="text-xs font-bold uppercase tracking-wider mb-1">Distributed</h3>
+                            <p class="text-sm text-muted leading-relaxed">Generate unique IDs without coordination.</p>
+                        </div>
+                        <div class="p-4 border">
+                            <h3 class="text-xs font-bold uppercase tracking-wider mb-1">DB Efficient</h3>
+                            <p class="text-sm text-muted leading-relaxed">Sequential inserts improve B-tree performance.</p>
+                        </div>
+                        <div class="p-4 border">
+                            <h3 class="text-xs font-bold uppercase tracking-wider mb-1">Collision Safe</h3>
+                            <p class="text-sm text-muted leading-relaxed">74 random bits prevent collisions.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-8">
+                    <h2 class="text-base font-bold uppercase tracking-wider mb-4">Comparison</h2>
+                    <div class="border">
+                        <table class="w-full text-sm">
+                            <thead><tr class="border-b bg-subtle"><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Ver</th><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Time</th><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Sort</th><th class="text-left py-2.5 px-3 text-xs font-bold uppercase tracking-wider text-muted">Use</th></tr></thead>
+                            <tbody>
+                                <tr class="border-b"><td class="py-2.5 px-3 font-bold">V1</td><td class="py-2.5 px-3">✓</td><td class="py-2.5 px-3 text-muted">✗</td><td class="py-2.5 px-3 text-muted">Legacy</td></tr>
+                                <tr class="border-b"><td class="py-2.5 px-3 font-bold">V4</td><td class="py-2.5 px-3 text-muted">✗</td><td class="py-2.5 px-3 text-muted">✗</td><td class="py-2.5 px-3 text-muted">Random</td></tr>
+                                <tr class="border-b"><td class="py-2.5 px-3 font-bold">V6</td><td class="py-2.5 px-3">✓</td><td class="py-2.5 px-3">✓</td><td class="py-2.5 px-3 text-muted">Migration</td></tr>
+                                <tr class="bg-[var(--accent)]/10"><td class="py-2.5 px-3 font-bold text-[var(--accent)]">V7</td><td class="py-2.5 px-3">✓</td><td class="py-2.5 px-3">✓</td><td class="py-2.5 px-3 font-bold">Modern ★</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-8">
+                    <h2 class="text-base font-bold uppercase tracking-wider mb-4">FAQ</h2>
+                    <div class="border divide-y">
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">Generate in JavaScript<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t"><pre class="p-3 mt-3 bg-subtle font-mono text-xs overflow-x-auto">import { v7 as uuidv7 } from 'uuid';
+const id = uuidv7();</pre></div></details>
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">Extract Timestamp?<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t pt-3">Yes. First 48 bits = Unix ms timestamp. Use the parser tab.</div></details>
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">V7 vs V4?<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t pt-3">V7 is better for DB primary keys (sorted inserts). V4 is fine when ordering doesn't matter.</div></details>
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">Timestamp Overflow?<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t pt-3">Year 10889 AD. The 48-bit timestamp lasts ~8,800 years from 1970.</div></details>
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">What is Monotonic?<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t pt-3">Ensures strict ordering within same ms using counter instead of random bits.</div></details>
+                        <details class="group"><summary class="flex items-center justify-between cursor-pointer p-4 text-sm font-bold uppercase tracking-wider hover:bg-subtle">RFC Spec?<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></summary><div class="px-4 pb-4 text-sm text-muted border-t pt-3"><a href="https://www.rfc-editor.org/rfc/rfc9562" target="_blank" rel="noopener noreferrer" class="text-[var(--accent)] hover:underline">RFC 9562</a> (May 2024), supersedes RFC 4122.</div></details>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="border-t mt-16">
+            <div class="max-w-3xl mx-auto px-6 py-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-muted uppercase tracking-widest">
+                    <div class="flex items-center gap-2">
+                        <div class="w-5 h-5 bg-[var(--accent)] flex items-center justify-center">
+                            <span class="text-[var(--accent-fg)] text-[8px] font-bold">V7</span>
+                        </div>
+                        <span class="font-bold">UUIDv7 Tools</span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <a href="https://www.rfc-editor.org/rfc/rfc9562" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--fg)] transition-colors font-medium">RFC 9562</a>
+                        <a href="https://github.com/viperadnan-git/pages/tree/main/uuidv7" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--fg)] transition-colors flex items-center gap-1.5 font-medium">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            Source
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        // Initialize theme - default to light, respect saved preference
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            }
+            // If no saved preference, default is light (no class needed)
+        })();
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => { 
+                b.classList.remove('border-[var(--accent)]', 'text-[var(--fg)]'); 
+                b.classList.add('border-transparent', 'text-muted');
+                b.setAttribute('aria-selected', 'false');
+            });
+            document.getElementById('panel-' + tab).classList.remove('hidden');
+            const btn = document.getElementById('tab-' + tab);
+            btn.classList.add('border-[var(--accent)]', 'text-[var(--fg)]');
+            btn.classList.remove('border-transparent', 'text-muted');
+            btn.setAttribute('aria-selected', 'true');
+        }
+        function setGenMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(b => { 
+                b.classList.remove('bg-[var(--fg)]', 'text-[var(--bg)]'); 
+                b.classList.add('text-muted'); 
+            });
+            const btn = document.getElementById('mode-' + mode);
+            btn.classList.add('bg-[var(--fg)]', 'text-[var(--bg)]');
+            btn.classList.remove('text-muted');
+            document.getElementById('customValues').classList.toggle('hidden', mode !== 'custom');
+            if (mode === 'custom') { setCurrentTime(); generateRandomBits(); }
+        }
+        function setCurrentTime() {
+            const now = new Date();
+            document.getElementById('customTimestamp').value = now.toISOString();
+            syncToPicker(now);
+            validateTimestampInput();
+        }
+        function setTimestamp(offset) {
+            const date = new Date(Date.now() + offset);
+            document.getElementById('customTimestamp').value = date.toISOString();
+            syncToPicker(date);
+            validateTimestampInput();
+        }
+        function syncFromPicker() {
+            const picker = document.getElementById('customTimestampPicker');
+            if (picker.value) {
+                const date = new Date(picker.value);
+                document.getElementById('customTimestamp').value = date.toISOString();
+                validateTimestampInput();
+            }
+        }
+        function syncToPicker(date) {
+            const picker = document.getElementById('customTimestampPicker');
+            const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            picker.value = local.toISOString().slice(0, 19);
+        }
+        function validateTimestampInput() {
+            const input = document.getElementById('customTimestamp').value.trim();
+            const errorEl = document.getElementById('timestampError');
+            const previewEl = document.getElementById('timestampPreview');
+            if (!input) { errorEl.classList.add('hidden'); previewEl.classList.add('hidden'); return null; }
+            const parsed = parseTimestampInput(input);
+            if (parsed) {
+                errorEl.classList.add('hidden');
+                previewEl.textContent = 'Parsed: ' + parsed.toISOString() + ' (' + dateFns.formatDistanceToNow(parsed, { addSuffix: true }) + ')';
+                previewEl.classList.remove('hidden');
+                syncToPicker(parsed);
+                return parsed;
+            } else {
+                errorEl.textContent = 'Invalid timestamp format';
+                errorEl.classList.remove('hidden');
+                previewEl.classList.add('hidden');
+                return null;
+            }
+        }
+        function parseTimestampInput(input) {
+            const trimmed = input.trim();
+            // Try ISO 8601 format
+            let date = new Date(trimmed);
+            if (!isNaN(date.getTime())) return date;
+            // Try Unix timestamp (ms)
+            if (/^\d{13}$/.test(trimmed)) { date = new Date(parseInt(trimmed)); if (!isNaN(date.getTime())) return date; }
+            // Try Unix timestamp (s)
+            if (/^\d{10}$/.test(trimmed)) { date = new Date(parseInt(trimmed) * 1000); if (!isNaN(date.getTime())) return date; }
+            // Try common formats
+            const formats = [
+                /^(\d{4})-(\d{2})-(\d{2})$/, // YYYY-MM-DD
+                /^(\d{4})\/(\d{2})\/(\d{2})$/, // YYYY/MM/DD
+                /^(\d{2})\/(\d{2})\/(\d{4})$/, // MM/DD/YYYY
+            ];
+            for (const fmt of formats) {
+                const match = trimmed.match(fmt);
+                if (match) { date = new Date(trimmed); if (!isNaN(date.getTime())) return date; }
+            }
+            return null;
+        }
+        function generateRandomBits() {
+            const bytes = new Uint8Array(6);
+            crypto.getRandomValues(bytes);
+            document.getElementById('customRandom').value = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        function isCustomMode() { return document.getElementById('mode-custom').classList.contains('bg-[var(--bg)]'); }
+        
+        // Monotonic state
+        let lastTimestamp = 0;
+        let monotonicCounter = 0;
+        
+        function generateUUID() {
+            const startTime = performance.now();
+            let timestamp, randomHex;
+            const isMonotonic = document.getElementById('monotonicMode').checked;
+            
+            if (isCustomMode()) {
+                const dateInput = document.getElementById('customTimestamp').value;
+                const randomInput = document.getElementById('customRandom').value.toLowerCase();
+                if (!dateInput) { showToast('Please enter a timestamp', 'error'); return; }
+                const parsed = parseTimestampInput(dateInput);
+                if (!parsed) { showToast('Invalid timestamp format', 'error'); return; }
+                if (!/^[0-9a-f]{12}$/i.test(randomInput)) { showToast('Random bits must be 12 hex chars', 'error'); return; }
+                timestamp = parsed.getTime();
+                randomHex = randomInput;
+            } else {
+                timestamp = Date.now();
+                if (isMonotonic && timestamp === lastTimestamp) {
+                    monotonicCounter++;
+                } else {
+                    monotonicCounter = 0;
+                    lastTimestamp = timestamp;
+                }
+                const bytes = new Uint8Array(6);
+                crypto.getRandomValues(bytes);
+                randomHex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            const uuid = createUUIDv7(timestamp, randomHex, isMonotonic ? monotonicCounter : null);
+            const elapsed = performance.now() - startTime;
+            document.getElementById('generatedUUID').value = uuid;
+            document.getElementById('generatedUUIDHighlight').innerHTML = highlightUUID(uuid);
+            document.getElementById('generatedResult').classList.remove('hidden');
+            showBreakdown(uuid, timestamp, elapsed);
+        }
+        
+        function highlightUUID(uuid) {
+            const parts = uuid.split('-');
+            if (parts.length !== 5) return uuid;
+            // Colors: timestamp=sky, version=violet, rand_a=amber, variant=emerald, rand_b=rose
+            return '<span class="text-sky-600 dark:text-sky-400">' + parts[0] + '</span><span class="text-muted">-</span>' +
+                   '<span class="text-sky-600 dark:text-sky-400">' + parts[1] + '</span><span class="text-muted">-</span>' +
+                   '<span class="text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="text-amber-600 dark:text-amber-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span>' +
+                   '<span class="text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="text-rose-600 dark:text-rose-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span>' +
+                   '<span class="text-rose-600 dark:text-rose-400">' + parts[4] + '</span>';
+        }
+        
+        function createUUIDv7(timestamp, randomHex, counter) {
+            const tsHex = timestamp.toString(16).padStart(12, '0');
+            let randA;
+            if (counter !== null) {
+                // Monotonic: use counter in rand_a
+                randA = (counter & 0xFFF).toString(16).padStart(3, '0');
+            } else {
+                randA = randomHex.substring(0, 3);
+            }
+            const randBFirst = randomHex.substring(3, 4);
+            const randBRest = randomHex.substring(4);
+            const extraBytes = new Uint8Array(8);
+            crypto.getRandomValues(extraBytes);
+            const extraHex = Array.from(extraBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+            const part1 = tsHex.substring(0, 8);
+            const part2 = tsHex.substring(8, 12);
+            const part3 = '7' + randA;
+            const variantNibble = (parseInt(randBFirst, 16) & 0x3) | 0x8;
+            const part4 = variantNibble.toString(16) + randBRest + extraHex.substring(0, 2);
+            const part5 = extraHex.substring(2, 14);
+            return part1 + '-' + part2 + '-' + part3 + '-' + part4 + '-' + part5;
+        }
+        function showBreakdown(uuid, timestamp, elapsed) {
+            const date = new Date(timestamp);
+            const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
+            const perfText = elapsed !== undefined ? elapsed.toFixed(3) + 'ms' : '';
+            document.getElementById('generatedBreakdown').innerHTML = '<div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Timestamp</div><div class="text-sm break-all">' + date.toISOString() + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Created</div><div class="text-sm font-bold">' + rel + '</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">Version</div><div class="text-sm font-bold">7</div></div><div class="p-3 bg-[var(--bg)]"><div class="text-xs font-bold uppercase tracking-wider text-muted mb-1">' + (perfText ? 'Time' : 'Variant') + '</div><div class="text-sm font-bold">' + (perfText || 'RFC 4122') + '</div></div>';
+        }
+        function generateBatch() {
+            const count = Math.min(100, Math.max(1, parseInt(document.getElementById('batchCount').value) || 5));
+            const uuids = [];
+            const isMonotonic = document.getElementById('monotonicMode').checked;
+            let batchTs = Date.now();
+            let batchCounter = 0;
+            const startTime = performance.now();
+            for (let i = 0; i < count; i++) {
+                const now = Date.now();
+                if (isMonotonic && now === batchTs) {
+                    batchCounter++;
+                } else {
+                    batchCounter = 0;
+                    batchTs = now;
+                }
+                const bytes = new Uint8Array(6);
+                crypto.getRandomValues(bytes);
+                uuids.push(createUUIDv7(batchTs, Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''), isMonotonic ? batchCounter : null));
+            }
+            const elapsed = performance.now() - startTime;
+            const rate = Math.round(count / (elapsed / 1000));
+            document.getElementById('batchUUIDs').value = uuids.join('\n');
+            document.getElementById('batchResult').classList.remove('hidden');
+            document.getElementById('copyBatchBtn').classList.remove('hidden');
+            document.getElementById('batchPerf').textContent = elapsed.toFixed(2) + 'ms · ' + rate.toLocaleString() + ' UUIDs/sec';
+            document.getElementById('batchPerf').classList.remove('hidden');
+            showToast('Generated ' + count + ' UUIDs', 'success');
+        }
+        function detectUUIDVersion(uuid) {
+            const clean = uuid.replace(/-/g, '').toLowerCase();
+            if (!/^[0-9a-f]{32}$/.test(clean)) return { valid: false, error: 'Invalid format. Must be 32 hex characters.' };
+            const version = clean.charAt(12);
+            const variantChar = clean.charAt(16);
+            const isRFC4122 = ['8','9','a','b'].includes(variantChar);
+            const versionNames = { '1': 'UUIDv1 (Time-based)', '2': 'UUIDv2 (DCE)', '3': 'UUIDv3 (MD5)', '4': 'UUIDv4 (Random)', '5': 'UUIDv5 (SHA-1)', '6': 'UUIDv6 (Reordered Time)', '7': 'UUIDv7 (Unix Time)', '8': 'UUIDv8 (Custom)' };
+            return { valid: true, version, versionName: versionNames[version] || 'Unknown (v' + version + ')', isRFC4122, variantChar };
+        }
+        function parseUUID() {
+            const input = document.getElementById('parseInput').value.trim();
+            const statusDiv = document.getElementById('validationStatus');
+            const resultDiv = document.getElementById('parseResult');
+            if (!input) {
+                statusDiv.classList.add('hidden');
+                resultDiv.classList.add('hidden');
+                return;
+            }
+            const info = detectUUIDVersion(input);
+            if (!info.valid) {
+                statusDiv.innerHTML = '<div class="flex items-center gap-2 p-3 border border-red-500/20 bg-red-500/10 text-red-700 dark:text-red-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm">' + info.error + '</span></div>';
+                statusDiv.classList.remove('hidden'); resultDiv.classList.add('hidden'); return;
+            }
+            const isV7 = info.version === '7';
+            const statusColor = isV7 ? 'green' : 'blue';
+            statusDiv.innerHTML = '<div class="flex items-center gap-2 p-3 border border-' + statusColor + '-500/20 bg-' + statusColor + '-500/10 text-' + statusColor + '-700 dark:text-' + statusColor + '-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm font-bold uppercase tracking-wider">Valid UUID · ' + info.versionName + '</span></div>';
+            statusDiv.classList.remove('hidden');
+            const clean = input.replace(/-/g, '').toLowerCase();
+            const version = info.version;
+            const variantBits = parseInt(info.variantChar, 16).toString(2).padStart(4, '0').substring(0, 2);
+            
+            // Version-specific parsing
+            if (isV7 || version === '6') {
+                const timestamp = parseInt(clean.substring(0, 12), 16);
+                const date = new Date(timestamp);
+                const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
+                const randA = clean.substring(13, 16);
+                const randB = clean.substring(17);
+                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-2 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted break-all">Unix ms: ' + timestamp.toLocaleString() + '</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
+                document.getElementById('parsedTimestampValue').textContent = date.toISOString();
+                document.getElementById('parsedRandom').innerHTML = '<div class="grid grid-cols-2 gap-4"><div><span class="text-muted text-xs font-bold uppercase tracking-wider">rand_a</span><div class="font-mono text-base mt-1 break-all">' + randA + '</div></div><div><span class="text-muted text-xs font-bold uppercase tracking-wider">rand_b</span><div class="font-mono text-base mt-1 break-all">' + randB + '</div></div></div>';
+                document.getElementById('parsedRandomValue').textContent = randA + randB;
+            } else if (version === '1') {
+                // UUIDv1: time is split differently
+                const timeLow = clean.substring(0, 8);
+                const timeMid = clean.substring(8, 12);
+                const timeHi = clean.substring(13, 16);
+                const timestamp60bit = BigInt('0x' + timeHi + timeMid + timeLow);
+                const unixNs = timestamp60bit - BigInt('122192928000000000');
+                const unixMs = Number(unixNs / BigInt(10000));
+                const date = new Date(unixMs);
+                const rel = dateFns.formatDistanceToNow(date, { addSuffix: true });
+                document.getElementById('parsedTimestamp').innerHTML = '<div class="font-mono text-lg sm:text-xl mb-2 break-all">' + date.toISOString() + '</div><div class="text-sm text-muted">Gregorian 100ns intervals</div><div class="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-subtle border text-sm font-bold">' + rel + '</div>';
+                document.getElementById('parsedTimestampValue').textContent = date.toISOString();
+                const clockSeq = clean.substring(17, 21);
+                const node = clean.substring(21);
+                document.getElementById('parsedRandom').innerHTML = '<div class="grid grid-cols-2 gap-4"><div><span class="text-muted text-xs font-bold uppercase tracking-wider">Clock Seq</span><div class="font-mono text-base mt-1 break-all">' + clockSeq + '</div></div><div><span class="text-muted text-xs font-bold uppercase tracking-wider">Node (MAC)</span><div class="font-mono text-base mt-1 break-all">' + node + '</div></div></div>';
+                document.getElementById('parsedRandomValue').textContent = clockSeq + node;
+            } else {
+                // v4 and others - no timestamp
+                document.getElementById('parsedTimestamp').innerHTML = '<div class="text-base text-muted">No timestamp (version ' + version + ' uses random data)</div>';
+                document.getElementById('parsedTimestampValue').textContent = 'N/A';
+                const randomData = clean.substring(0, 12) + clean.substring(13, 16) + clean.substring(17);
+                document.getElementById('parsedRandom').innerHTML = '<div><span class="text-muted text-xs font-bold uppercase tracking-wider">Random Data</span><div class="font-mono text-base mt-1 break-all">' + randomData + '</div></div>';
+                document.getElementById('parsedRandomValue').textContent = randomData;
+            }
+            
+            document.getElementById('parsedVersion').textContent = version + ' (' + info.versionName.split(' ')[0] + ')';
+            document.getElementById('parsedVersionValue').textContent = version;
+            document.getElementById('parsedVariant').innerHTML = (info.isRFC4122 ? 'RFC 4122' : 'Non-standard') + ' <span class="text-muted text-sm ml-1">(' + variantBits + ')</span>';
+            document.getElementById('parsedVariantValue').textContent = info.isRFC4122 ? 'RFC 4122' : 'Non-standard';
+            
+            // Generate version-specific colored structure
+            const parts = input.toLowerCase().split('-');
+            if (parts.length === 5) {
+                let structureHTML, legendHTML;
+                
+                if (isV7 || version === '6') {
+                    // v6/v7: timestamp, version, rand_a, variant, rand_b
+                    structureHTML = '<span class="px-2 py-1 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400">' + parts[0] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400">' + parts[1] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[4] + '</span>';
+                    legendHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-500"></span>timestamp</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-500"></span>version</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>rand_a</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>variant</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>rand_b</span>';
+                } else if (version === '1') {
+                    // v1: time_low, time_mid, version+time_hi, variant+clock_seq, node
+                    structureHTML = '<span class="px-2 py-1 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400">' + parts[0] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400">' + parts[1] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="px-2 py-1 rounded bg-sky-500/10 text-sky-600 dark:text-sky-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[4] + '</span>';
+                    legendHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-500"></span>time</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-500"></span>version</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>variant</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>clock_seq</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>node</span>';
+                } else if (version === '4') {
+                    // v4: all random except version and variant
+                    structureHTML = '<span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[0] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[1] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">' + parts[4] + '</span>';
+                    legendHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-500"></span>version</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>variant</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span>random</span>';
+                } else if (version === '3' || version === '5') {
+                    // v3/v5: hash-based (MD5/SHA1)
+                    structureHTML = '<span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[0] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[1] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">' + parts[4] + '</span>';
+                    legendHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-500"></span>version</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>variant</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>' + (version === '3' ? 'MD5 hash' : 'SHA-1 hash') + '</span>';
+                } else {
+                    // Other versions: generic coloring
+                    structureHTML = '<span class="px-2 py-1 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">' + parts[0] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">' + parts[1] + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold">' + parts[2].charAt(0) + '</span><span class="px-2 py-1 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">' + parts[2].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">' + parts[3].charAt(0) + '</span><span class="px-2 py-1 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">' + parts[3].substring(1) + '</span><span class="text-muted">-</span><span class="px-2 py-1 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">' + parts[4] + '</span>';
+                    legendHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-500"></span>version</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>variant</span><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-neutral-500"></span>data</span>';
+                }
+                
+                document.getElementById('parsedStructure').innerHTML = '<div class="flex flex-wrap items-center gap-1 font-mono text-sm mb-4 pb-2">' + structureHTML + '</div><div class="flex flex-wrap gap-3 text-xs">' + legendHTML + '</div>';
+            }
+            resultDiv.classList.remove('hidden');
+        }
+        function copyField(id) {
+            const el = document.getElementById(id);
+            const text = el ? (el.value || el.textContent) : '';
+            if (text && text !== 'N/A') {
+                navigator.clipboard.writeText(text).then(() => showToast('Copied', 'success')).catch(() => showToast('Failed', 'error'));
+            }
+        }
+        function pasteAndParse() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('parseInput').value = text.trim();
+                parseUUID();
+            }).catch(() => {
+                showToast('Unable to access clipboard', 'error');
+            });
+        }
+        function copyToClipboard(id) {
+            const el = document.getElementById(id);
+            navigator.clipboard.writeText(el.value || el.textContent).then(() => showToast('Copied to clipboard', 'success')).catch(() => showToast('Failed to copy', 'error'));
+        }
+        function shareUUID() {
+            const uuid = document.getElementById('generatedUUID').value;
+            if (!uuid) return;
+            const url = window.location.origin + window.location.pathname + '?uuid=' + encodeURIComponent(uuid);
+            if (navigator.share) {
+                navigator.share({ title: 'UUIDv7', text: uuid, url: url }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url).then(() => showToast('Share link copied', 'success')).catch(() => showToast('Failed to copy', 'error'));
+            }
+        }
+        function showToast(msg, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-enter flex items-center gap-2 px-4 py-3 rounded-none text-sm font-medium shadow-lg border ' + (type === 'success' ? 'bg-[var(--bg)] border-green-500/20 text-green-600 dark:text-green-400' : type === 'error' ? 'bg-[var(--bg)] border-red-500/20 text-red-600 dark:text-red-400' : 'bg-[var(--accent)] text-[var(--accent-fg)]');
+            toast.innerHTML = (type === 'success' ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>' : '') + '<span>' + msg + '</span>';
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(8px)'; setTimeout(() => toast.remove(), 200); }, 2000);
+        }
+        // Copy UUID with tooltip (no toast)
+        function copyUUIDWithTooltip() {
+            const uuid = document.getElementById('generatedUUID').value;
+            if (!uuid) return;
+            navigator.clipboard.writeText(uuid).then(() => {
+                const tooltip = document.getElementById('copyTooltip');
+                tooltip.classList.add('show');
+                setTimeout(() => tooltip.classList.remove('show'), 1500);
+            }).catch(() => {});
+        }
+        // Handle parse input with clear button visibility
+        function handleParseInput() {
+            const input = document.getElementById('parseInput');
+            const clearBtn = document.getElementById('clearParseBtn');
+            clearBtn.classList.toggle('hidden', !input.value.trim());
+            parseUUID();
+        }
+        // Clear parse input
+        function clearParseInput() {
+            const input = document.getElementById('parseInput');
+            input.value = '';
+            document.getElementById('clearParseBtn').classList.add('hidden');
+            document.getElementById('validationStatus').classList.add('hidden');
+            document.getElementById('parseResult').classList.add('hidden');
+            input.focus();
+        }
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Cmd/Ctrl + G = Generate
+            if ((e.metaKey || e.ctrlKey) && e.key === 'g') {
+                e.preventDefault();
+                switchTab('generate');
+                generateUUID();
+            }
+            // Cmd/Ctrl + V when on parse tab or input focused = paste and parse
+            if ((e.metaKey || e.ctrlKey) && e.key === 'v') {
+                const parseInput = document.getElementById('parseInput');
+                const isParseTab = !document.getElementById('panel-parse').classList.contains('hidden');
+                if (isParseTab || document.activeElement === parseInput) {
+                    // Let default paste happen, then parse
+                    setTimeout(() => {
+                        handleParseInput();
+                    }, 10);
+                }
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            generateUUID();
+            // URL parameter support
+            const urlParams = new URLSearchParams(window.location.search);
+            const uuidParam = urlParams.get('uuid');
+            if (uuidParam) {
+                document.getElementById('parseInput').value = uuidParam;
+                document.getElementById('clearParseBtn').classList.remove('hidden');
+                switchTab('parse');
+                parseUUID();
+            }
+        });
+        document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function(e) { e.preventDefault(); document.querySelector(this.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' }); }));
+    </script>
+</body>
+</html>
