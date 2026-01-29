@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Pages | viperadnan - Utility Tools & Browser Applications</title>
+    <meta name="title" content="Pages | viperadnan - Utility Tools & Browser Applications">
+    <meta name="description" content="A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs. UUID generators, privacy policies, code utilities and more.">
+    <meta name="keywords" content="web tools, browser utilities, uuid generator, privacy policy, code tools, viperadnan, github pages, online tools, free utilities, web applications">
+    <meta name="author" content="viperadnan">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <meta name="generator" content="GitHub Pages">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="color-scheme" content="light dark">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Pages">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://viperadnan-git.github.io/pages/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://viperadnan-git.github.io/pages/">
+    <meta property="og:title" content="Pages | viperadnan - Utility Tools & Browser Applications">
+    <meta property="og:description" content="A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.">
+    <meta property="og:image" content="https://api.microlink.io/?url=https://viperadnan-git.github.io/pages/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pages by viperadnan - A collection of utility tools and browser-based applications">
+    <meta property="og:site_name" content="viperadnan Pages">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://viperadnan-git.github.io/pages/">
+    <meta name="twitter:title" content="Pages | viperadnan - Utility Tools & Browser Applications">
+    <meta name="twitter:description" content="A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.">
+    <meta name="twitter:image" content="https://api.microlink.io/?url=https://viperadnan-git.github.io/pages/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta name="twitter:image:alt" content="Pages by viperadnan - A collection of utility tools and browser-based applications">
+    <meta name="twitter:creator" content="@viperadnan">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23007AFF'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white'>P</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23007AFF'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='white'>P</text></svg>">
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://api.github.com" crossorigin>
+    <link rel="preconnect" href="https://api.microlink.io" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.github.com">
+    <link rel="dns-prefetch" href="https://api.microlink.io">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Structured Data - WebSite -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Pages | viperadnan",
+        "alternateName": "viperadnan Utility Pages",
+        "description": "A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.",
+        "url": "https://viperadnan-git.github.io/pages/",
+        "inLanguage": "en-US",
+        "author": {
+            "@type": "Person",
+            "name": "viperadnan",
+            "url": "https://github.com/viperadnan-git"
+        },
+        "publisher": {
+            "@type": "Person",
+            "name": "viperadnan"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://viperadnan-git.github.io/pages/?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <!-- Structured Data - ItemList for pages -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Utility Pages Collection",
+        "description": "Browse all available utility tools and browser-based applications",
+        "url": "https://viperadnan-git.github.io/pages/",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Pages | viperadnan",
+            "url": "https://viperadnan-git.github.io/pages/"
+        }
+    }
+    </script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sf': ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                    colors: {
+                        apple: {
+                            blue: '#007AFF',
+                            gray: {
+                                50: '#F5F5F7',
+                                100: '#E8E8ED',
+                                200: '#D2D2D7',
+                                300: '#86868B',
+                                400: '#6E6E73',
+                                500: '#1D1D1F',
+                                600: '#141414',
+                                700: '#0a0a0a',
+                            }
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                        'shimmer': 'shimmer 2s infinite linear',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <style>
+        /* Base styles */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(128, 128, 128, 0.5);
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+        
+        /* Card hover */
+        .card-hover {
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        .dark .card-hover:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .card-hover:active {
+            transform: scale(0.98);
+        }
+        
+        /* Hero gradient */
+        .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(0, 122, 255, 0.12) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom right, rgba(175, 82, 222, 0.08) 0%, transparent 50%);
+        }
+        .dark .hero-gradient {
+            background: radial-gradient(ellipse at top, rgba(0, 122, 255, 0.2) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom right, rgba(175, 82, 222, 0.15) 0%, transparent 50%);
+        }
+        
+        /* Skeleton - using pseudo element for shimmer */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(128, 128, 128, 0.1);
+        }
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(128, 128, 128, 0.15) 50%, 
+                transparent 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .dark .skeleton {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .dark .skeleton::after {
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.08) 50%, 
+                transparent 100%);
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Image fade in */
+        .img-loading {
+            opacity: 0;
+        }
+        .img-loaded {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Grid */
+        .pages-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .pages-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .pages-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Card base */
+        .page-card {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .dark .page-card {
+            background: rgba(20, 20, 20, 0.8);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+        @media (min-width: 640px) {
+            .page-card {
+                border-radius: 1.25rem;
+            }
+        }
+        
+        /* Card image container */
+        .card-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        .dark .card-image {
+            background: #1a1a1a;
+        }
+        
+        /* Card content */
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            width: 100%;
+        }
+        @media (min-width: 640px) {
+            .card-content {
+                padding: 1.25rem;
+            }
+        }
+        
+        /* Skeleton elements inside card */
+        .skeleton-title {
+            height: 1.25rem;
+            width: 70%;
+            border-radius: 0.375rem;
+            margin-bottom: 0.75rem;
+        }
+        .skeleton-desc {
+            height: 0.875rem;
+            border-radius: 0.25rem;
+            margin-bottom: 0.375rem;
+        }
+        .skeleton-desc:last-of-type {
+            margin-bottom: 0.75rem;
+        }
+        .skeleton-meta {
+            height: 0.75rem;
+            width: 5rem;
+            border-radius: 0.25rem;
+        }
+        @media (min-width: 640px) {
+            .skeleton-title {
+                height: 1.5rem;
+            }
+            .skeleton-desc {
+                height: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-sf bg-apple-gray-50 dark:bg-apple-gray-700 text-apple-gray-500 dark:text-white min-h-screen flex flex-col">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-apple-blue text-white px-4 py-2 rounded-lg z-50">
+        Skip to main content
+    </a>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass bg-white/70 dark:bg-apple-gray-700/70 border-b border-black/5 dark:border-white/5" role="navigation" aria-label="Main navigation">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-12">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-2" aria-label="Pages Home">
+                    <svg class="w-5 h-5 text-apple-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                        <path d="M10 9H8"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                    </svg>
+                    <span class="font-semibold">Pages</span>
+                </a>
+                
+                <!-- Actions -->
+                <div class="flex items-center">
+                    <a href="https://github.com/viperadnan-git/pages" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                       aria-label="View source on GitHub">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                        </svg>
+                    </a>
+                    
+                    <button id="theme-toggle" 
+                            class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                            aria-label="Toggle dark mode">
+                        <svg class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
+                        </svg>
+                        <svg class="w-5 h-5 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <header class="pt-16 sm:pt-20 min-h-[50vh] sm:min-h-[45vh] flex items-center hero-gradient relative overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+            <div class="absolute -top-20 -right-20 sm:-top-32 sm:-right-32 w-40 h-40 sm:w-64 sm:h-64 bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 sm:-bottom-32 sm:-left-32 w-40 h-40 sm:w-64 sm:h-64 bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 text-center relative">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 animate-fade-in tracking-tight text-apple-gray-500 dark:text-white">
+                Pages
+            </h1>
+            
+            <p class="text-lg sm:text-xl md:text-2xl text-apple-gray-400 dark:text-apple-gray-200 max-w-3xl mx-auto mb-3 sm:mb-4 animate-slide-up font-light">
+                A collection of utility tools and browser-based applications.
+            </p>
+            
+            <p class="text-sm sm:text-base text-apple-gray-300 max-w-2xl mx-auto mb-8 sm:mb-10 animate-slide-up" style="animation-delay: 0.1s;">
+                Powered by modern web technologies and free public APIs.
+            </p>
+            
+            <!-- Search -->
+            <div class="max-w-md sm:max-w-lg mx-auto animate-slide-up" style="animation-delay: 0.2s;">
+                <label for="search-input" class="sr-only">Search pages</label>
+                <div class="relative">
+                    <svg class="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-apple-gray-300 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                    </svg>
+                    <input type="search" 
+                           id="search-input"
+                           name="q"
+                           placeholder="Search" 
+                           autocomplete="off"
+                           class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-apple-gray-600/90 border border-black/5 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-apple-blue/30 shadow-lg shadow-black/5 dark:shadow-black/20 text-sm sm:text-base placeholder:text-apple-gray-300 transition-shadow">
+                    <kbd class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-apple-gray-300 bg-apple-gray-100/80 dark:bg-white/10 rounded border border-black/5 dark:border-white/10 font-medium" aria-hidden="true">
+                        ⌘K
+                    </kbd>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="flex items-center justify-center gap-6 sm:gap-8 mt-8 text-sm animate-slide-up" style="animation-delay: 0.3s;">
+                <div class="text-center">
+                    <p class="text-xl sm:text-2xl font-semibold text-apple-gray-500 dark:text-white" id="page-count">
+                        <span class="skeleton inline-block w-6 sm:w-8 h-6 sm:h-7 rounded align-middle"></span>
+                    </p>
+                    <p class="text-[10px] sm:text-xs text-apple-gray-300 mt-0.5">Pages</p>
+                </div>
+                <div class="w-px h-8 sm:h-10 bg-apple-gray-200 dark:bg-white/10" aria-hidden="true"></div>
+                <div class="text-center">
+                    <p class="text-xl sm:text-2xl font-semibold text-apple-gray-500 dark:text-white" id="last-updated">
+                        <span class="skeleton inline-block w-16 sm:w-20 h-6 sm:h-7 rounded align-middle"></span>
+                    </p>
+                    <p class="text-[10px] sm:text-xs text-apple-gray-300 mt-0.5">Last Updated</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" role="main">
+        <h2 class="sr-only">Available Pages</h2>
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="pages-grid" aria-label="Loading pages" role="status">
+            <span class="sr-only">Loading pages...</span>
+            
+            <!-- Skeleton Card 1 -->
+            <article class="page-card">
+                <div class="card-image skeleton"></div>
+                <div class="card-content">
+                    <div class="skeleton skeleton-title" style="width: 70%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 100%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 80%;"></div>
+                    <div class="skeleton skeleton-meta"></div>
+                </div>
+            </article>
+            
+            <!-- Skeleton Card 2 -->
+            <article class="page-card">
+                <div class="card-image skeleton"></div>
+                <div class="card-content">
+                    <div class="skeleton skeleton-title" style="width: 55%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 100%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 65%;"></div>
+                    <div class="skeleton skeleton-meta"></div>
+                </div>
+            </article>
+            
+            <!-- Skeleton Card 3 (hidden on mobile) -->
+            <article class="page-card hidden sm:flex">
+                <div class="card-image skeleton"></div>
+                <div class="card-content">
+                    <div class="skeleton skeleton-title" style="width: 60%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 100%;"></div>
+                    <div class="skeleton skeleton-desc" style="width: 75%;"></div>
+                    <div class="skeleton skeleton-meta"></div>
+                </div>
+            </article>
+        </div>
+        
+        <!-- Pages Grid -->
+        <div id="pages-grid" class="pages-grid hidden" role="list" aria-label="Available pages"></div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-16 sm:py-24" role="status">
+            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-apple-gray-100 dark:bg-white/5 mb-4 sm:mb-6">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-apple-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg sm:text-xl font-semibold mb-2">No Results</h3>
+            <p class="text-sm sm:text-base text-apple-gray-300">No pages match your search.</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="hidden text-center py-16 sm:py-24" role="alert">
+            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-red-50 dark:bg-red-500/10 mb-4 sm:mb-6">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg sm:text-xl font-semibold mb-2">Unable to Load</h3>
+            <p class="text-sm sm:text-base text-apple-gray-300 mb-6 max-w-sm mx-auto" id="error-message">An error occurred while fetching data.</p>
+            <button onclick="loadPages()" 
+                    class="px-5 py-2.5 bg-apple-blue text-white text-sm font-medium rounded-full hover:bg-blue-600 active:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-apple-blue/50 focus:ring-offset-2 dark:focus:ring-offset-apple-gray-700">
+                Try Again
+            </button>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="w-full border-t border-black/5 dark:border-white/5" role="contentinfo">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <nav class="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-2 text-xs text-apple-gray-300 mb-3" aria-label="Footer">
+                <a href="https://github.com/viperadnan-git/pages" target="_blank" rel="noopener noreferrer" class="hover:text-apple-gray-500 dark:hover:text-white transition-colors">
+                    GitHub
+                </a>
+                <span class="text-apple-gray-200 dark:text-white/10" aria-hidden="true">•</span>
+                <a href="https://github.com/viperadnan-git/pages/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="hover:text-apple-gray-500 dark:hover:text-white transition-colors">
+                    MIT License
+                </a>
+                <span class="text-apple-gray-200 dark:text-white/10" aria-hidden="true">•</span>
+                <a href="https://github.com/viperadnan-git" target="_blank" rel="noopener noreferrer" class="hover:text-apple-gray-500 dark:hover:text-white transition-colors">
+                    viperadnan
+                </a>
+            </nav>
+            <p class="text-center text-[11px] text-apple-gray-300">
+                © <span id="current-year"></span> viperadnan. All rights reserved.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Configuration
+        const CONFIG = {
+            owner: 'viperadnan-git',
+            repo: 'pages',
+            branch: 'main',
+            baseUrl: 'https://viperadnan-git.github.io/pages',
+            apiBase: 'https://api.github.com',
+            screenshotApi: 'https://api.microlink.io',
+            excludeDirs: ['.github', 'node_modules', 'assets', 'css', 'js', 'images'],
+            excludeFiles: ['LICENSE', 'README.md', 'CNAME', '.gitignore', '.nojekyll'],
+            indexFiles: ['index.html', 'index.htm', 'index.md']
+        };
+        
+        // State
+        let allPages = [];
+        
+        // DOM Elements
+        const $ = (sel) => document.querySelector(sel);
+        const loadingState = $('#loading-state');
+        const pagesGrid = $('#pages-grid');
+        const emptyState = $('#empty-state');
+        const errorState = $('#error-state');
+        const errorMessage = $('#error-message');
+        const searchInput = $('#search-input');
+        const pageCount = $('#page-count');
+        const lastUpdated = $('#last-updated');
+        
+        // Theme
+        const initTheme = () => {
+            const stored = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.classList.toggle('dark', stored === 'dark' || (!stored && prefersDark));
+        };
+        
+        $('#theme-toggle').addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                document.documentElement.classList.toggle('dark', e.matches);
+            }
+        });
+        
+        initTheme();
+        $('#current-year').textContent = new Date().getFullYear();
+        
+        // Utilities
+        const formatDate = (dateStr) => {
+            const diff = Math.floor((Date.now() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
+            if (diff === 0) return 'Today';
+            if (diff === 1) return 'Yesterday';
+            if (diff < 7) return `${diff}d ago`;
+            if (diff < 30) return `${Math.floor(diff / 7)}w ago`;
+            if (diff < 365) return `${Math.floor(diff / 30)}mo ago`;
+            return `${Math.floor(diff / 365)}y ago`;
+        };
+        
+        const formatTitle = (name) => name.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        
+        const getScreenshotUrl = (url) => 
+            `${CONFIG.screenshotApi}/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
+        
+        // API Functions
+        const fetchJSON = async (url) => {
+            const res = await fetch(url);
+            if (!res.ok) {
+                if (res.status === 403) throw new Error('Rate limit exceeded. Please try again later.');
+                if (res.status === 404) throw new Error('Repository not found.');
+                throw new Error(`Failed to fetch (${res.status})`);
+            }
+            return res.json();
+        };
+        
+        const fetchRepoInfo = () => fetchJSON(`${CONFIG.apiBase}/repos/${CONFIG.owner}/${CONFIG.repo}`);
+        const fetchRepoTree = () => fetchJSON(`${CONFIG.apiBase}/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/${CONFIG.branch}?recursive=1`);
+        const fetchCommits = (path) => fetchJSON(`${CONFIG.apiBase}/repos/${CONFIG.owner}/${CONFIG.repo}/commits?path=${path}&per_page=1`).catch(() => []);
+        
+        const fetchPageMeta = async (url) => {
+            try {
+                const data = await fetchJSON(`${CONFIG.screenshotApi}?url=${encodeURIComponent(url)}`);
+                return { 
+                    title: data.data?.title, 
+                    description: data.data?.description,
+                    image: data.data?.screenshot?.url 
+                };
+            } catch {
+                return { title: null, description: null, image: null };
+            }
+        };
+        
+        // Parse pages from tree
+        const findPagesFromTree = (tree) => {
+            const indexFiles = new Map();
+            
+            for (const item of tree) {
+                if (item.type === 'blob') {
+                    const parts = item.path.split('/');
+                    const fileName = parts.pop();
+                    const dirPath = parts.join('/');
+                    
+                    if (dirPath && CONFIG.indexFiles.includes(fileName.toLowerCase())) {
+                        if (!CONFIG.excludeDirs.some(ex => dirPath.includes(ex))) {
+                            indexFiles.set(dirPath, item);
+                        }
+                    }
+                }
+            }
+            
+            return Array.from(indexFiles.keys()).map(dirPath => ({
+                name: dirPath.split('/').pop(),
+                path: dirPath,
+                url: `${CONFIG.baseUrl}/${dirPath}/`,
+                lastModified: null
+            }));
+        };
+        
+        // Create card HTML
+        const createCard = (page) => {
+            const id = page.name.replace(/[^a-zA-Z0-9]/g, '-');
+            const screenshot = getScreenshotUrl(page.url);
+            
+            return `
+                <article class="page-card card-hover group" role="listitem">
+                    <a href="${page.url}" target="_blank" rel="noopener noreferrer" class="flex flex-col h-full" aria-labelledby="title-${id}">
+                        <div class="card-image">
+                            <div class="absolute inset-0 skeleton" id="skel-${id}"></div>
+                            <img src="${screenshot}" 
+                                 alt="" 
+                                 class="absolute inset-0 w-full h-full object-cover object-top img-loading"
+                                 loading="lazy"
+                                 onload="this.classList.replace('img-loading','img-loaded');document.getElementById('skel-${id}').remove();"
+                                 onerror="this.remove();">
+                        </div>
+                        <div class="card-content flex-1">
+                            <h3 class="text-base sm:text-lg font-semibold mb-1 group-hover:text-apple-blue transition-colors line-clamp-1" id="title-${id}">
+                                ${formatTitle(page.name)}
+                            </h3>
+                            <p class="text-xs sm:text-sm text-apple-gray-300 dark:text-apple-gray-200 line-clamp-2 mb-2 flex-1" id="desc-${id}">
+                                Loading...
+                            </p>
+                            <div class="flex items-center justify-between text-[10px] sm:text-xs text-apple-gray-300">
+                                <time datetime="${page.lastModified || ''}" id="time-${id}">${page.lastModified ? formatDate(page.lastModified) : '—'}</time>
+                                <span class="opacity-0 group-hover:opacity-100 transition-opacity">Open →</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            `;
+        };
+        
+        // Render
+        const render = (pages) => {
+            if (!pages.length) {
+                pagesGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            pagesGrid.classList.remove('hidden');
+            pagesGrid.innerHTML = pages.map(createCard).join('');
+            
+            // Load metadata
+            pages.forEach(async (page) => {
+                const meta = await fetchPageMeta(page.url);
+                const id = page.name.replace(/[^a-zA-Z0-9]/g, '-');
+                const descEl = document.getElementById(`desc-${id}`);
+                if (descEl) {
+                    descEl.textContent = meta.description || `Explore ${formatTitle(page.name)}`;
+                }
+                page.meta = meta;
+            });
+        };
+        
+        // Filter
+        const filter = (query) => {
+            const q = query.toLowerCase().trim();
+            if (!q) return render(allPages);
+            
+            render(allPages.filter(p => 
+                formatTitle(p.name).toLowerCase().includes(q) ||
+                p.path.toLowerCase().includes(q) ||
+                p.meta?.description?.toLowerCase().includes(q)
+            ));
+        };
+        
+        // Load
+        const loadPages = async () => {
+            loadingState.classList.remove('hidden');
+            pagesGrid.classList.add('hidden');
+            emptyState.classList.add('hidden');
+            errorState.classList.add('hidden');
+            
+            try {
+                const [repo, tree] = await Promise.all([fetchRepoInfo(), fetchRepoTree()]);
+                const pages = findPagesFromTree(tree.tree);
+                
+                pages.forEach(p => p.lastModified = repo.pushed_at);
+                allPages = pages;
+                
+                pageCount.textContent = pages.length;
+                lastUpdated.textContent = formatDate(repo.pushed_at);
+                
+                loadingState.classList.add('hidden');
+                render(pages);
+                
+                // Background: fetch real dates
+                const commits = await Promise.all(pages.map(p => fetchCommits(p.path)));
+                commits.forEach((c, i) => {
+                    if (c[0]?.commit?.committer?.date) {
+                        pages[i].lastModified = c[0].commit.committer.date;
+                        const el = document.getElementById(`time-${pages[i].name.replace(/[^a-zA-Z0-9]/g, '-')}`);
+                        if (el) {
+                            el.textContent = formatDate(pages[i].lastModified);
+                            el.setAttribute('datetime', pages[i].lastModified);
+                        }
+                    }
+                });
+                
+                // Re-sort and re-render
+                allPages.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+                render(allPages);
+                
+            } catch (err) {
+                console.error(err);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                errorMessage.textContent = err.message || 'An error occurred.';
+            }
+        };
+        
+        // Events
+        searchInput.addEventListener('input', (e) => filter(e.target.value));
+        
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.value = '';
+                filter('');
+                searchInput.blur();
+            }
+        });
+        
+        // Init
+        loadPages();
+    </script>
+</body>
+</html>
