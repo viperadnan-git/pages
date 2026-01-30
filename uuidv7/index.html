@@ -399,8 +399,8 @@
                     <div class="flex items-center justify-between mb-4 pb-4 border-b">
                         <p class="text-xs font-bold tracking-[0.2em] uppercase text-muted">Generator</p>
                         <div class="flex items-center border">
-                            <button onclick="setGenMode('random')" id="mode-random" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase bg-[var(--fg)] text-[var(--bg)]">Random</button>
-                            <button onclick="setGenMode('custom')" id="mode-custom" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase text-muted hover:text-[var(--fg)]">Custom</button>
+                            <button onclick="setGenMode('random')" id="mode-random" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase transition-colors bg-[var(--fg)] text-[var(--bg)]">Random</button>
+                            <button onclick="setGenMode('custom')" id="mode-custom" class="mode-btn px-3 py-1.5 text-xs font-bold tracking-wider uppercase transition-colors text-[var(--fg-muted)] hover:text-[var(--fg)]">Custom</button>
                         </div>
                     </div>
                     
@@ -702,11 +702,11 @@ const id = uuidv7();</pre></div></details>
         function setGenMode(mode) {
             document.querySelectorAll('.mode-btn').forEach(b => { 
                 b.classList.remove('bg-[var(--fg)]', 'text-[var(--bg)]'); 
-                b.classList.add('text-muted'); 
+                b.classList.add('text-[var(--fg-muted)]', 'hover:text-[var(--fg)]'); 
             });
             const btn = document.getElementById('mode-' + mode);
             btn.classList.add('bg-[var(--fg)]', 'text-[var(--bg)]');
-            btn.classList.remove('text-muted');
+            btn.classList.remove('text-[var(--fg-muted)]', 'hover:text-[var(--fg)]');
             document.getElementById('customValues').classList.toggle('hidden', mode !== 'custom');
             if (mode === 'custom') { setCurrentTime(); generateRandomBits(); }
         }
