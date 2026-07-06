@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>viperadnan · Primary Mark Guidelines</title>
+<meta name="description" content="Brand guidelines for the viperadnan primary mark — anatomy, clear space, colorways, lockups, and downloadable assets. Monochrome ink on paper.">
+<meta property="og:title" content="viperadnan · Primary Mark Guidelines">
+<meta property="og:description" content="Anatomy, clear space, colorways, lockups, and downloadable assets for the viperadnan mark.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#17160f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M39 14 L50 40 L61 14 L85 71 L65 71 L50 47 L35 71 L15 71 Z' fill='%2317160F'/><rect x='28' y='79' width='44' height='8' rx='4' fill='%2317160F'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+  .page { min-height:100vh; background:#f4f2ec; color:#17160f; font-family:'Space Grotesk',sans-serif; -webkit-font-smoothing:antialiased; padding:56px clamp(20px,5vw,56px) 80px; }
+  .wrap { max-width:1120px; margin:0 auto; }
+  .grid { display:grid; gap:20px; }
+  .grid > * { min-width:0; }
+  .cols-2 { grid-template-columns:1fr 1fr; }
+  .cols-clear { grid-template-columns:1.3fr 1fr; }
+  .cols-4 { grid-template-columns:repeat(4,1fr); }
+  .anatomy-box { position:relative; width:300px; height:300px; }
+  .anatomy-box svg { width:100%; height:100%; }
+  .dl, .hero-dl { transition:border-color .15s, background .15s, color .15s; }
+  .dl > div:last-child { flex-wrap:wrap; row-gap:6px; }
+  .dl:hover { border-color:#17160f; }
+  .hero-dl:hover { background:#f4f2ec; color:#17160f; border-color:#f4f2ec; }
+  .dl:focus-visible, .hero-dl:focus-visible { outline:2px solid #17160f; outline-offset:2px; }
+  @media (max-width:900px) {
+    .cols-4 { grid-template-columns:repeat(2,1fr); }
+    .cols-2, .cols-clear { grid-template-columns:1fr; }
+  }
+  @media (max-width:560px) {
+    .page { padding:32px 18px 56px; }
+    .hero { padding:48px 28px !important; }
+    .anatomy-box { width:min(260px,74vw); height:min(260px,74vw); }
+    .eyebrow-row { flex-direction:column; align-items:flex-start !important; gap:6px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    * { transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Primary mark: fanged A/V chevron on a terminal underscore, centred on a 1:1 square -->
+    <symbol id="pm" viewBox="0 0 100 100"><path d="M39 14 L50 40 L61 14 L85 71 L65 71 L50 47 L35 71 L15 71 Z" fill="currentColor"/><rect x="28" y="79" width="44" height="8" rx="4" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<main class="page">
+  <div class="wrap">
+
+    <!-- title row -->
+    <div class="eyebrow-row" style="display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap; padding-bottom:26px; border-bottom:1px solid #ddd8cc;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; color:#8a8577; text-transform:uppercase;">Primary Mark · Guidelines</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#8a8577;">viperadnan / 2026</div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero" style="margin-top:24px; background:#17160f; border-radius:24px; padding:72px 56px; color:#f4f2ec; display:flex; flex-direction:column; align-items:center;">
+      <svg viewBox="0 0 100 100" width="168" height="168" style="max-width:60%;" aria-label="viperadnan mark"><use href="#pm"/></svg>
+      <div style="font-size:clamp(28px,6vw,38px); font-weight:600; letter-spacing:-.01em; margin-top:34px;">viperadnan</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.18em; color:#8f8a7c; margin-top:12px; text-transform:uppercase;">Adnan Ahmad</div>
+      <button class="hero-dl" data-dl="mark" aria-label="Download mark SVG" style="margin-top:30px; display:inline-flex; align-items:center; gap:9px; background:transparent; color:#f4f2ec; border:1px solid #3a382e; border-radius:11px; padding:12px 20px; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.06em; cursor:pointer;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 11l5 5 5-5"></path><path d="M4 20h16"></path></svg>
+        DOWNLOAD SVG
+      </button>
+    </div>
+
+    <!-- ANATOMY -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">01 — Anatomy &amp; construction · square 1:1</div>
+      <div class="grid cols-2" style="align-items:stretch;">
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:32px; display:flex; align-items:center; justify-content:center;">
+          <div class="anatomy-box">
+            <div style="position:absolute; inset:0; border:1.5px solid #d8d2c4; border-radius:66px;"></div>
+            <div style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#fff; padding:0 6px; font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em; color:#a39d8e;">1 : 1</div>
+            <svg viewBox="0 0 100 100" style="position:absolute; inset:0; color:#17160f; opacity:.15;" aria-hidden="true">
+              <line x1="20" y1="12" x2="20" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="30" y1="12" x2="30" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="40" y1="12" x2="40" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="60" y1="12" x2="60" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="70" y1="12" x2="70" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="80" y1="12" x2="80" y2="88" stroke="currentColor" stroke-width=".5"/>
+              <line x1="12" y1="20" x2="88" y2="20" stroke="currentColor" stroke-width=".5"/><line x1="12" y1="30" x2="88" y2="30" stroke="currentColor" stroke-width=".5"/><line x1="12" y1="40" x2="88" y2="40" stroke="currentColor" stroke-width=".5"/><line x1="12" y1="60" x2="88" y2="60" stroke="currentColor" stroke-width=".5"/><line x1="12" y1="70" x2="88" y2="70" stroke="currentColor" stroke-width=".5"/><line x1="12" y1="80" x2="88" y2="80" stroke="currentColor" stroke-width=".5"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width=".7"/>
+              <line x1="50" y1="8" x2="50" y2="92" stroke="currentColor" stroke-width=".8"/><line x1="8" y1="50" x2="92" y2="50" stroke="currentColor" stroke-width=".8"/>
+              <line x1="12" y1="12" x2="88" y2="88" stroke="currentColor" stroke-width=".5"/><line x1="88" y1="12" x2="12" y2="88" stroke="currentColor" stroke-width=".5"/>
+            </svg>
+            <svg viewBox="0 0 100 100" style="position:absolute; inset:0; color:#17160f; z-index:1;" aria-hidden="true"><g transform="translate(50 50) scale(1.2) translate(-50 -50)"><use href="#pm"/></g></svg>
+          </div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:32px; display:flex; flex-direction:column; justify-content:center; gap:20px;">
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; width:28px; flex-shrink:0; line-height:1.2;">□</div>
+            <div><div style="font-size:15px; font-weight:600;">1:1 square canvas</div><div style="font-size:13.5px; color:#6b6659; line-height:1.5; margin-top:3px;">Every vertex snaps to a 10-unit grid; the mark centres in any square.</div></div>
+          </div>
+          <div style="height:1px; background:#efece3;"></div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:600; width:28px; flex-shrink:0;">A</div>
+            <div><div style="font-size:15px; font-weight:600;">The peak — Adnan</div><div style="font-size:13.5px; color:#6b6659; line-height:1.5; margin-top:3px;">Read the whole silhouette top-down: a capital A, the initial.</div></div>
+          </div>
+          <div style="height:1px; background:#efece3;"></div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:600; width:28px; flex-shrink:0;">V</div>
+            <div><div style="font-size:15px; font-weight:600;">The fanged mouth — viper</div><div style="font-size:13.5px; color:#6b6659; line-height:1.5; margin-top:3px;">The apex splits into two fangs; the gap between them is a V.</div></div>
+          </div>
+          <div style="height:1px; background:#efece3;"></div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:600; width:28px; flex-shrink:0;">_</div>
+            <div><div style="font-size:15px; font-weight:600;">The underscore — the craft</div><div style="font-size:13.5px; color:#6b6659; line-height:1.5; margin-top:3px;">A terminal cursor grounds the mark and marks the engineer.</div></div>
+          </div>
+          <div style="height:1px; background:#efece3;"></div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#6b6659; border:1px solid #e4dfd3; border-radius:6px; padding:5px 9px;">GRID · 10u</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#6b6659; border:1px solid #e4dfd3; border-radius:6px; padding:5px 9px;">CHEVRON · 66°</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#6b6659; border:1px solid #e4dfd3; border-radius:6px; padding:5px 9px;">UNDERSCORE · 6×1u</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#6b6659; border:1px solid #e4dfd3; border-radius:6px; padding:5px 9px;">CLEAR · 1u</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLEAR SPACE + MIN SIZE -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">02 — Clear space &amp; minimum size</div>
+      <div class="grid cols-clear">
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:32px; display:flex; align-items:center; justify-content:center;">
+          <div style="position:relative; padding:44px;">
+            <div style="position:absolute; inset:0; border:1px dashed #c9c3b4; border-radius:10px;"></div>
+            <div style="position:absolute; top:6px; left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:10px; color:#a39d8e;">X</div>
+            <div style="position:absolute; left:6px; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:10px; color:#a39d8e;">X</div>
+            <div style="width:130px; height:130px; color:#17160f; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="130" height="130" aria-hidden="true"><use href="#pm"/></svg></div>
+          </div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:32px; display:flex; flex-direction:column; justify-content:center; gap:26px;">
+          <div style="font-size:13.5px; color:#6b6659; line-height:1.55;">Keep clear space of at least <b style="color:#17160f;">X</b> — the underscore height — on all sides. Never crowd the mark.</div>
+          <div style="display:flex; align-items:flex-end; gap:24px; flex-wrap:wrap;">
+            <div style="text-align:center;"><div style="width:16px; height:16px; color:#17160f; margin:0 auto;"><svg viewBox="0 0 100 100" width="16" height="16" aria-hidden="true"><use href="#pm"/></svg></div><div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#a39d8e; margin-top:8px;">16px</div></div>
+            <div style="text-align:center;"><div style="width:24px; height:24px; color:#17160f; margin:0 auto;"><svg viewBox="0 0 100 100" width="24" height="24" aria-hidden="true"><use href="#pm"/></svg></div><div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#a39d8e; margin-top:8px;">24px</div></div>
+            <div style="text-align:center;"><div style="width:32px; height:32px; color:#17160f; margin:0 auto;"><svg viewBox="0 0 100 100" width="32" height="32" aria-hidden="true"><use href="#pm"/></svg></div><div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#a39d8e; margin-top:8px;">32px</div></div>
+            <div style="text-align:center;"><div style="width:48px; height:48px; color:#17160f; margin:0 auto;"><svg viewBox="0 0 100 100" width="48" height="48" aria-hidden="true"><use href="#pm"/></svg></div><div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; color:#a39d8e; margin-top:8px;">48px</div></div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a8577;">Minimum: 16px. Below that, drop the underscore.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLORWAYS -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">03 — Colorways</div>
+      <div class="grid cols-4">
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="52%" height="52%" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="padding:14px 16px;"><div style="font-size:14px; font-weight:600;">Primary</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">paper on ink</div></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#f4f2ec; color:#17160f; display:flex; align-items:center; justify-content:center; border-bottom:1px solid #e4dfd3;"><svg viewBox="0 0 100 100" width="52%" height="52%" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="padding:14px 16px;"><div style="font-size:14px; font-weight:600;">Reverse</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">ink on paper</div></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><div style="width:74%; height:74%; border-radius:50%; border:2px solid currentColor; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="50%" height="50%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:14px 16px;"><div style="font-size:14px; font-weight:600;">Avatar</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">GitHub roundel</div></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#f4f2ec; display:flex; align-items:center; justify-content:center;"><div style="width:34px; height:34px; border-radius:9px; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="20" height="20" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:14px 16px;"><div style="font-size:14px; font-weight:600;">Favicon</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">16–32px tab</div></div>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a8577; margin-top:16px;">Monochrome only — <b style="color:#17160f;">#17160F</b> ink / <b style="color:#17160f;">#F4F2EC</b> paper. Never introduce colour or gradients.</div>
+    </div>
+
+    <!-- LOCKUPS -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">04 — Lockups</div>
+      <div class="grid cols-2">
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:clamp(28px,5vw,44px); display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:22px;">
+          <div style="width:66px; height:66px; color:#17160f; flex-shrink:0;"><svg viewBox="0 0 100 100" width="66" height="66" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="width:1.5px; height:56px; background:#e4dfd3;"></div>
+          <div style="font-size:clamp(24px,7vw,30px); font-weight:600; letter-spacing:-.015em;">viperadnan</div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:36px 44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+          <div style="width:60px; height:60px; color:#17160f;"><svg viewBox="0 0 100 100" width="60" height="60" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; letter-spacing:.34em; text-transform:uppercase; padding-left:.34em;">Adnan Ahmad</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IN CONTEXT -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">05 — In context</div>
+      <div class="grid cols-2">
+
+        <!-- terminal -->
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#17160f; padding:0; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:7px; padding:13px 16px; border-bottom:1px solid #2a2820;"><span style="width:10px; height:10px; border-radius:50%; background:#3b382e;"></span><span style="width:10px; height:10px; border-radius:50%; background:#3b382e;"></span><span style="width:10px; height:10px; border-radius:50%; background:#3b382e;"></span></div>
+          <div style="padding:22px 20px 30px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#c9c4b6; line-height:1.9;">
+            <div style="display:flex; align-items:center; gap:9px;"><span style="width:16px; height:16px; color:#f4f2ec; display:inline-flex;"><svg viewBox="0 0 100 100" width="16" height="16" aria-hidden="true"><use href="#pm"/></svg></span><span style="color:#8f8a7c;">viperadnan@dev</span> <span style="color:#f4f2ec;">~</span> %</div>
+            <div style="color:#8f8a7c;">$ git commit -m "ship it"</div>
+            <div style="display:flex; align-items:center; gap:9px;"><span style="width:16px; height:16px; color:#f4f2ec; display:inline-flex;"><svg viewBox="0 0 100 100" width="16" height="16" aria-hidden="true"><use href="#pm"/></svg></span><span style="color:#8f8a7c;">viperadnan@dev</span> <span style="color:#f4f2ec;">~</span> % <span style="display:inline-block; width:9px; height:16px; background:#f4f2ec; vertical-align:middle; margin-left:2px;"></span></div>
+          </div>
+        </div>
+
+        <!-- github avatar -->
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:32px; display:flex; align-items:center; gap:20px;">
+          <div style="width:78px; height:78px; border-radius:50%; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg viewBox="0 0 100 100" width="42" height="42" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div>
+            <div style="font-size:20px; font-weight:600;">Adnan Ahmad</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#8a8577; margin-top:2px;">@viperadnan</div>
+            <div style="display:inline-block; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#6b6659; border:1px solid #e4dfd3; border-radius:7px; padding:5px 10px;">399 followers · 74 repos</div>
+          </div>
+        </div>
+
+        <!-- browser tab -->
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:28px; display:flex; align-items:center; justify-content:center;">
+          <div style="width:100%; max-width:340px;">
+            <div style="display:flex; align-items:center; gap:9px; background:#eeeae1; border:1px solid #e0dbd0; border-radius:10px 10px 0 0; padding:9px 12px; max-width:210px;">
+              <span style="width:15px; height:15px; color:#17160f; display:inline-flex;"><svg viewBox="0 0 100 100" width="15" height="15" aria-hidden="true"><use href="#pm"/></svg></span>
+              <span style="font-size:12px; color:#4a463d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">viperadnan.com</span>
+              <span style="margin-left:auto; color:#a39d8e; font-size:12px;">×</span>
+            </div>
+            <div style="height:60px; background:#f4f2ec; border:1px solid #e0dbd0; border-top:none; border-radius:0 0 10px 10px;"></div>
+          </div>
+        </div>
+
+        <!-- business card -->
+        <div style="border:1px solid #e4dfd3; border-radius:20px; background:#fff; padding:28px; display:flex; align-items:center; justify-content:center;">
+          <div style="width:100%; max-width:300px; aspect-ratio:300/172; background:#17160f; border-radius:14px; color:#f4f2ec; padding:24px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="width:40px; height:40px; color:#f4f2ec;"><svg viewBox="0 0 100 100" width="40" height="40" aria-hidden="true"><use href="#pm"/></svg></div>
+            <div>
+              <div style="font-size:18px; font-weight:600;">Adnan Ahmad</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8f8a7c; margin-top:4px;">viperadnan.com · @viperadnan</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MISUSE -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">06 — Misuse</div>
+      <div class="grid cols-4">
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#f4f2ec; display:flex; align-items:center; justify-content:center; position:relative;"><div style="width:44%; height:44%; color:#17160f; transform:rotate(18deg);"><svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:8px;"><span style="width:16px; height:16px; border-radius:50%; border:1.5px solid #17160f; position:relative; display:inline-flex; flex-shrink:0;"><span style="position:absolute; top:50%; left:2px; right:2px; height:1.5px; background:#17160f; transform:rotate(-45deg);"></span></span><span style="font-size:12.5px; color:#4a463d;">Don't rotate</span></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#f4f2ec; display:flex; align-items:center; justify-content:center;"><div style="width:44%; height:30%; color:#17160f;"><svg viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:8px;"><span style="width:16px; height:16px; border-radius:50%; border:1.5px solid #17160f; position:relative; display:inline-flex; flex-shrink:0;"><span style="position:absolute; top:50%; left:2px; right:2px; height:1.5px; background:#17160f; transform:rotate(-45deg);"></span></span><span style="font-size:12.5px; color:#4a463d;">Don't stretch</span></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#6b6659; display:flex; align-items:center; justify-content:center;"><div style="width:44%; height:44%; color:#57534a;"><svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:8px;"><span style="width:16px; height:16px; border-radius:50%; border:1.5px solid #17160f; position:relative; display:inline-flex; flex-shrink:0;"><span style="position:absolute; top:50%; left:2px; right:2px; height:1.5px; background:#17160f; transform:rotate(-45deg);"></span></span><span style="font-size:12.5px; color:#4a463d;">Don't low-contrast</span></div>
+        </div>
+        <div style="border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff;">
+          <div style="aspect-ratio:1; background:#f4f2ec; display:flex; align-items:center; justify-content:center;"><div style="width:44%; height:44%; color:#17160f; transform:scaleX(-1) rotate(180deg);"><svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:13px 16px; display:flex; align-items:center; gap:8px;"><span style="width:16px; height:16px; border-radius:50%; border:1.5px solid #17160f; position:relative; display:inline-flex; flex-shrink:0;"><span style="position:absolute; top:50%; left:2px; right:2px; height:1.5px; background:#17160f; transform:rotate(-45deg);"></span></span><span style="font-size:12.5px; color:#4a463d;">Don't flip</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div style="margin-top:56px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.2em; color:#8a8577; text-transform:uppercase; margin-bottom:18px;">07 — Download</div>
+      <div class="grid cols-4">
+
+        <button class="dl" data-dl="mark" aria-label="Download ink mark, transparent SVG" style="width:100%; text-align:left; border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff; padding:0; cursor:pointer; font-family:inherit; display:block;">
+          <div style="aspect-ratio:1; background:#f4f2ec; color:#17160f; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="46%" height="46%" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div><div style="font-size:14px; font-weight:600; color:#17160f;">Mark</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">ink · transparent</div></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#17160f; border:1px solid #d8d2c4; border-radius:6px; padding:5px 8px; white-space:nowrap;">↓ SVG</span>
+          </div>
+        </button>
+
+        <button class="dl" data-dl="mark-white" aria-label="Download paper mark, transparent SVG" style="width:100%; text-align:left; border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff; padding:0; cursor:pointer; font-family:inherit; display:block;">
+          <div style="aspect-ratio:1; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="46%" height="46%" aria-hidden="true"><use href="#pm"/></svg></div>
+          <div style="padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div><div style="font-size:14px; font-weight:600; color:#17160f;">Mark · white</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">paper · transparent</div></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#17160f; border:1px solid #d8d2c4; border-radius:6px; padding:5px 8px; white-space:nowrap;">↓ SVG</span>
+          </div>
+        </button>
+
+        <button class="dl" data-dl="icon" aria-label="Download app icon squircle SVG" style="width:100%; text-align:left; border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff; padding:0; cursor:pointer; font-family:inherit; display:block;">
+          <div style="aspect-ratio:1; background:#efece3; display:flex; align-items:center; justify-content:center;"><div style="width:70%; aspect-ratio:1; border-radius:22%; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="52%" height="52%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div><div style="font-size:14px; font-weight:600; color:#17160f;">App icon</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">ink squircle</div></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#17160f; border:1px solid #d8d2c4; border-radius:6px; padding:5px 8px; white-space:nowrap;">↓ SVG</span>
+          </div>
+        </button>
+
+        <button class="dl" data-dl="png" aria-label="Download 512 pixel app icon PNG" style="width:100%; text-align:left; border:1px solid #e4dfd3; border-radius:20px; overflow:hidden; background:#fff; padding:0; cursor:pointer; font-family:inherit; display:block;">
+          <div style="aspect-ratio:1; background:#efece3; display:flex; align-items:center; justify-content:center;"><div style="width:70%; aspect-ratio:1; border-radius:22%; background:#17160f; color:#f4f2ec; display:flex; align-items:center; justify-content:center;"><svg viewBox="0 0 100 100" width="52%" height="52%" aria-hidden="true"><use href="#pm"/></svg></div></div>
+          <div style="padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div><div style="font-size:14px; font-weight:600; color:#17160f;">App icon</div><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#8a8577; margin-top:2px;">512 × 512</div></div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#17160f; border:1px solid #d8d2c4; border-radius:6px; padding:5px 8px; white-space:nowrap;">↓ PNG</span>
+          </div>
+        </button>
+
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8a8577; margin-top:16px;">SVG scales infinitely · PNG rasterised at 512px · monochrome only.</div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const INK = '#17160F', PAPER = '#F4F2EC';
+  const markSvg = (c) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512"><path d="M39 14 L50 40 L61 14 L85 71 L65 71 L50 47 L35 71 L15 71 Z" fill="${c}"/><rect x="28" y="79" width="44" height="8" rx="4" fill="${c}"/></svg>`;
+  const iconSvg = (bg, fg) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512"><rect width="100" height="100" rx="22" fill="${bg}"/><g transform="translate(50 50) scale(0.72) translate(-50 -50)"><path d="M39 14 L50 40 L61 14 L85 71 L65 71 L50 47 L35 71 L15 71 Z" fill="${fg}"/><rect x="28" y="79" width="44" height="8" rx="4" fill="${fg}"/></g></svg>`;
+
+  function save(blob, name) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const dlSvg = (svg, name) => save(new Blob([svg], { type: 'image/svg+xml' }), name);
+  function dlPng(svg, name, size) {
+    const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = size; c.height = size;
+      c.getContext('2d').drawImage(img, 0, 0, size, size);
+      c.toBlob((b) => save(b, name));
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  }
+  const actions = {
+    mark: () => dlSvg(markSvg(INK), 'viperadnan-mark.svg'),
+    'mark-white': () => dlSvg(markSvg(PAPER), 'viperadnan-mark-white.svg'),
+    icon: () => dlSvg(iconSvg(INK, PAPER), 'viperadnan-icon.svg'),
+    png: () => dlPng(iconSvg(INK, PAPER), 'viperadnan-icon-512.png', 512),
+  };
+  document.querySelectorAll('[data-dl]').forEach((b) =>
+    b.addEventListener('click', () => actions[b.dataset.dl]?.())
+  );
+</script>
+</body>
+</html>
