@@ -1,0 +1,701 @@
+/* Panel styling after Teenage Engineering hardware:
+   moulded grey plastic, one orange signal colour, recessed LCD, numbered
+   channel buttons, everything on a 4px grid. */
+
+/* Palette lifted from duckduckgo.com/email's own stylesheet: neutral greys,
+   a blue accent, DuckDuckGo orange left to the logo alone. */
+
+:root {
+  --bg: #f0f4ff;          /* --title-background */
+  --panel: #ffffff;       /* --card-background-color */
+  --raise: #ffffff;
+  --sunk: #eeeeee;        /* --subtle-color */
+  --ink: #111111;         /* --emphasized-text-color */
+  --dim: #666666;         /* --deemphasized-text-color */
+  --line: #dddddd;        /* --separator-color */
+  --signal: #3969ef;      /* --link-color */
+  --signal-deep: #2b55ca; /* --button-color */
+  --danger: #ee1025;
+  --on-signal: #fff;
+  --shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 1px 2px rgba(17, 17, 17, .08);
+  --sunk-shadow: 0 1px 2px rgba(17, 17, 17, .13) inset, 0 -1px 0 rgba(255, 255, 255, .7);
+  --r: 10px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) { color-scheme: dark; }
+}
+
+:root {
+  --dark-bg: #111111;         /* --background-color */
+  --dark-panel: #222222;      /* --card-background-color */
+  --dark-raise: #2b2b2b;
+  --dark-sunk: #191919;
+  --dark-ink: #f5f5f5;        /* --text-color */
+  --dark-dim: #ababab;        /* --deemphasized-text-color */
+  --dark-line: #444444;       /* --separator-color */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg: var(--dark-bg); --panel: var(--dark-panel); --raise: var(--dark-raise);
+    --sunk: var(--dark-sunk); --ink: var(--dark-ink); --dim: var(--dark-dim);
+    --line: var(--dark-line);
+    --signal: #7295f6; --signal-deep: #8fabf9; --danger: #eb876c;
+    --shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 1px 3px rgba(0, 0, 0, .5);
+    --sunk-shadow: 0 2px 4px rgba(0, 0, 0, .5) inset, 0 -1px 0 rgba(255, 255, 255, .04);
+  }
+}
+
+:root[data-theme=dark] {
+  color-scheme: dark;
+  --bg: var(--dark-bg); --panel: var(--dark-panel); --raise: var(--dark-raise);
+  --sunk: var(--dark-sunk); --ink: var(--dark-ink); --dim: var(--dark-dim);
+  --line: var(--dark-line);
+  --signal: #7295f6; --signal-deep: #8fabf9; --danger: #eb876c;
+  --shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 1px 3px rgba(0, 0, 0, .5);
+  --sunk-shadow: 0 2px 4px rgba(0, 0, 0, .5) inset, 0 -1px 0 rgba(255, 255, 255, .04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* display rules below would otherwise beat the hidden attribute */
+[hidden] { display: none !important; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.5 Archivo, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: 20px 16px 56px;
+}
+
+.wrap { max-width: 940px; margin: 0 auto; }
+
+/* micro-labels: the mono face does the engraved-legend job */
+.legend {
+  font: 600 10px/1 'Martian Mono', ui-monospace, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.mono { font-family: 'Martian Mono', ui-monospace, monospace; }
+
+/* --- device shell --------------------------------------------------------- */
+
+.device {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px 16px;
+  flex-wrap: wrap;
+}
+
+.logo { width: 24px; height: 24px; flex: none; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.wordmark {
+  font: 800 19px/1 Archivo, sans-serif;
+  letter-spacing: -.02em;
+  text-transform: lowercase;
+}
+
+.device .spacer { flex: 1 1 auto; }
+
+/* three-way theme switch, the physical kind */
+.switch {
+  display: flex;
+  background: var(--sunk);
+  box-shadow: var(--sunk-shadow);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.switch button {
+  border: 0; background: none; cursor: pointer;
+  border-radius: 999px;
+  padding: 5px 10px;
+  color: var(--dim);
+  font: 600 10px/1 'Martian Mono', monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.switch button[aria-pressed=true] {
+  background: var(--raise);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+/* --- panels --------------------------------------------------------------- */
+
+.rack { display: grid; gap: 14px; }
+
+@media (min-width: 800px) {
+  /* generate carries the readout and the knob, so it takes the larger share */
+  .rack.split { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+}
+
+.panel {
+  min-width: 0;              /* grid items default to auto, letting the strip push the page wide */
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.panel > header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.panel > header .spacer { flex: 1 1 auto; }
+
+/* --- controls ------------------------------------------------------------- */
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line);
+  background: var(--raise);
+  box-shadow: var(--shadow);
+  border-radius: 7px;
+  padding: 8px 13px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.btn:active { box-shadow: var(--sunk-shadow); transform: translateY(1px); }
+.btn.primary { background: var(--signal); border-color: transparent; color: var(--on-signal); font-weight: 600; }
+.btn.danger { color: var(--danger); }
+.btn.primary.danger { background: var(--danger); border-color: transparent; color: #fff; }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+/* a field already has a border to work with, so tint that and add a soft ring
+   rather than stacking a detached outline outside it */
+.field:focus-visible {
+  outline: none;
+  border-color: var(--signal);
+  box-shadow: var(--sunk-shadow), 0 0 0 3px color-mix(in srgb, var(--signal) 25%, transparent);
+}
+
+.field {
+  width: 100%;
+  background: var(--sunk);
+  box-shadow: var(--sunk-shadow);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 9px 11px;
+}
+
+.field::placeholder { color: var(--dim); }
+
+textarea.field { resize: vertical; min-height: 84px; font: inherit; }
+
+label.stack { display: block; }
+summary, [role=option] { cursor: pointer; }
+label.stack .legend { display: block; margin-bottom: 6px; }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Hover is a pointer affordance; on touch it just sticks after a tap. */
+@media (hover: hover) {
+  .btn, .channel, .tabs button, .switch button, .select .menu button {
+    transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+  }
+
+  /* neutral controls warm toward the accent rather than just darkening */
+  .btn:hover,
+  .channel:not([aria-pressed=true]):hover {
+    background: color-mix(in srgb, var(--signal) 8%, var(--raise));
+    border-color: color-mix(in srgb, var(--signal) 40%, var(--line));
+  }
+
+  .btn.primary:hover,
+  .channel[aria-pressed=true]:hover {
+    background: var(--signal-deep);
+    border-color: transparent;
+  }
+
+  .btn.danger:hover {
+    background: color-mix(in srgb, var(--danger) 10%, var(--raise));
+    border-color: color-mix(in srgb, var(--danger) 45%, var(--line));
+  }
+
+  .btn.primary.danger:hover {
+    background: color-mix(in srgb, var(--danger) 82%, #000);
+    border-color: transparent;
+  }
+
+  /* segmented controls have no border to tint, so lift the label instead */
+  .close:hover { color: var(--ink); border-color: var(--dim); }
+
+  .tabs button:not([aria-selected=true]):hover,
+  .switch button:not([aria-pressed=true]):hover {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+
+  .select .menu button:not([aria-selected=true]):hover {
+    background: color-mix(in srgb, var(--signal) 10%, transparent);
+  }
+
+  .select .menu button[aria-selected=true]:hover { background: var(--signal-deep); }
+
+  .item:hover { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+}
+
+/* --- generate: the signature control -------------------------------------- */
+
+.generator { display: grid; gap: 14px; grid-template-columns: 1fr auto; align-items: center; }
+
+/* recessed LCD, the one place the alias is big enough to read across a desk */
+.lcd {
+  background: var(--sunk);
+  box-shadow: var(--sunk-shadow);
+  border-radius: 8px;
+  padding: 14px;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.lcd-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.lcd-head .legend:last-child { white-space: nowrap; }
+
+.lcd .value {
+  font: 600 clamp(14px, 3.6vw, 19px)/1.3 'Martian Mono', monospace;
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.lcd .value.idle { color: var(--dim); font-weight: 400; cursor: default; }
+
+/* the address is the copy target, not just a label */
+.item .num {
+  font: 400 11px/1.4 'Martian Mono', monospace;
+  color: var(--dim);
+  flex: none;
+  min-width: 3ch;
+}
+
+.item .addr {
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  color: inherit;
+}
+
+/* the encoder */
+.knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--signal);
+  color: var(--on-signal);
+  cursor: pointer;
+  font: 600 11px/1.35 'Martian Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  box-shadow: 0 3px 0 var(--signal-deep), 0 5px 12px rgba(17, 17, 17, .2);
+  transition: transform .12s, box-shadow .12s;
+}
+
+.knob:hover { transform: translateY(-1px); }
+.knob:active { transform: translateY(3px); box-shadow: 0 0 0 var(--signal-deep); }
+.knob[disabled] { opacity: .5; cursor: not-allowed; transform: none; }
+
+@media (max-width: 460px) {
+  .generator { grid-template-columns: 1fr; }
+  .knob {
+    width: 100%;
+    height: 46px;
+    border-radius: 999px;
+    flex-direction: row;
+    gap: 5px;
+    font-size: 10px;
+    box-shadow: 0 2px 0 var(--signal-deep), 0 3px 8px rgba(17, 17, 17, .18);
+  }
+
+  .knob:active { transform: translateY(2px); }
+}
+
+/* --- account strip -------------------------------------------------------- */
+
+/* accounts are named and unbounded, so they scroll horizontally rather than
+   sitting in fixed numbered slots */
+.strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+}
+
+.strip::-webkit-scrollbar { display: none; }
+
+/* fade whichever edge has more accounts behind it, so a clipped chip reads as
+   scrollable rather than broken */
+.strip[data-more=right] { mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent); }
+.strip[data-more=left]  { mask-image: linear-gradient(90deg, transparent, #000 34px); }
+.strip[data-more=both]  { mask-image: linear-gradient(90deg, transparent, #000 34px, #000 calc(100% - 34px), transparent); }
+
+.channel {
+  display: flex;
+  align-items: center;
+  flex: none;
+  scroll-snap-align: start;
+  max-width: 190px;
+  border: 1px solid var(--line);
+  background: var(--raise);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.channel .name {
+  font: 600 13px/1.2 Archivo, sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.channel[aria-pressed=true] {
+  background: var(--signal);
+  border-color: transparent;
+  color: var(--on-signal);
+  box-shadow: none;
+}
+
+.channel.add {
+  padding: 8px 13px;
+  font: 600 15px/1 'Martian Mono', monospace;
+  color: var(--dim);
+}
+
+/* the account card matches the generator's height; the slack falls between the
+   strip and the identity rather than trailing off the bottom */
+.panel.account { display: flex; flex-direction: column; }
+.panel.account .identity { margin-top: auto; padding-top: 16px; }
+
+.identity { margin-top: 12px; display: grid; gap: 3px; }
+.identity .who {
+  font: 600 15px/1.5 Archivo, sans-serif;
+  color: inherit;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  justify-self: start;
+}
+.identity .meta { font-size: 13px; color: var(--dim); }
+
+/* --- address list --------------------------------------------------------- */
+
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.filters #search { flex: 1 1 180px; width: auto; }
+
+/* dropdown: the native control cannot take the panel's recessed styling */
+.select { position: relative; flex: 0 0 auto; }
+
+.picker { flex-wrap: nowrap; gap: 8px; }
+.picker .select { flex: 1 1 auto; min-width: 0; }
+.picker .trigger { width: 100%; justify-content: space-between; }
+
+.select .trigger {
+  display: flex; align-items: center; gap: 10px;
+  width: auto;
+  cursor: pointer;
+  text-align: left;
+}
+
+.select .caret {
+  width: 7px; height: 7px;
+  border-right: 2px solid var(--dim);
+  border-bottom: 2px solid var(--dim);
+  transform: translateY(-2px) rotate(45deg);
+  flex: none;
+}
+
+.select[data-open] .caret { transform: translateY(1px) rotate(-135deg); }
+
+.select .menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 5;
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .18);
+  padding: 4px;
+}
+
+.select .menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.select .menu button[aria-selected=true] {
+  background: var(--signal);
+  color: var(--on-signal);
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .select { flex: 1 1 100%; }
+  .select .trigger { width: 100%; justify-content: space-between; }
+}
+
+.list { list-style: none; }
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px;
+  margin: 0 -8px;
+  border-radius: 7px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.item:first-child { border-top: 0; }
+.item .num {
+  font: 400 11px/1.4 'Martian Mono', monospace;
+  color: var(--dim);
+  flex: none;
+  min-width: 3ch;
+}
+
+.item .addr { font: 400 13px/1.4 'Martian Mono', monospace; overflow-wrap: anywhere; flex: 1 1 200px; }
+.item .when { font-size: 12px; color: var(--dim); white-space: nowrap; }
+.item .owner { font-weight: 600; color: var(--ink); }
+.item .note { flex-basis: 100%; font-size: 13px; color: var(--dim); }
+.item .note:empty { display: none; }
+
+.empty { padding: 22px 2px; color: var(--dim); }
+
+@media (max-width: 560px) {
+  /* address on the first row beside its number, meta and actions beneath */
+  .item { display: grid; grid-template-columns: auto 1fr auto auto; column-gap: 8px; row-gap: 8px; }
+  .item .num { grid-area: 1 / 1; align-self: center; }
+  .item .addr { grid-area: 1 / 2 / 2 / -1; flex: none; }
+  .item .when { grid-column: 1 / 3; align-self: center; }
+  .item .note { grid-column: 1 / -1; }
+}
+
+/* --- dialogs -------------------------------------------------------------- */
+
+dialog:not([open]) { display: none; }   /* the display rule below would keep it painted */
+
+dialog {
+  margin: auto;              /* the reset above zeroes the UA margin that centres it */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .3);
+  overflow: hidden;
+}
+
+/* settings holds a fixed frame so switching tabs never resizes the dialog */
+#settings { height: min(440px, calc(100dvh - 40px)); }   /* the tallest tab is Backup at ~420 */
+#signin { height: min(330px, calc(100dvh - 40px)); }
+#note { height: min(340px, calc(100dvh - 40px)); }
+#confirm { width: min(400px, calc(100vw - 32px)); }   /* the passphrase field appearing must not resize it */
+
+dialog form { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+dialog .body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px; }
+
+dialog .actions {
+  flex: none;
+  margin: 0;
+  padding: 13px 18px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  justify-content: flex-end;
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, .45); }
+dialog h2 { font-size: 17px; margin-bottom: 4px; }
+
+.title-row { display: flex; align-items: flex-start; gap: 10px; }
+.title-row h2 { flex: 1; min-width: 0; }
+.title-row .close { height: 30px; margin-top: -3px; }
+
+.head {
+  flex: none;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 18px 18px 0;
+}
+
+.close {
+  flex: none;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: var(--raise);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--dim);
+}
+
+.close svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; fill: none; }
+
+.tabs {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 2px;
+  background: var(--sunk);
+  box-shadow: var(--sunk-shadow);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.tabs button {
+  flex: 1;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 7px 4px;
+  color: var(--dim);
+  font: 600 10px/1 'Martian Mono', monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.tabs button[aria-selected=true] {
+  background: var(--raise);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.stackers { display: grid; gap: 8px; }
+dialog p.hint { font-size: 13px; color: var(--dim); margin-bottom: 14px; }
+dialog .stack + .stack, dialog .row { margin-top: 12px; }
+#settings .body { padding-top: 16px; }
+
+.checks { display: grid; gap: 8px; margin: 10px 0 4px; }
+.checks label { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.checks input { margin-top: 3px; accent-color: var(--signal); flex: none; cursor: pointer; }
+.checks span small { display: block; color: var(--dim); font-size: 12px; }
+
+.alert {
+  border-left: 3px solid var(--signal);
+  background: var(--sunk);
+  padding: 9px 11px;
+  border-radius: 5px;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.alert.ok { border-left-color: var(--signal); }
+.alert:empty { display: none; }
+
+/* --- toast ---------------------------------------------------------------- */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translate(-50%, 130%);
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font: 600 12px/1 'Martian Mono', monospace;
+  letter-spacing: .04em;
+  transition: transform .22s cubic-bezier(.2, .8, .3, 1);
+  z-index: 10;
+  max-width: calc(100vw - 32px);
+}
+
+#toast:not(.up) { visibility: hidden; }
+
+/* an animation, not a transition — re-adding the class replays it, so a second
+   copy visibly re-announces instead of sitting there */
+#toast.up {
+  transform: translate(-50%, 0);
+  animation: toast-in .24s cubic-bezier(.2, .8, .3, 1);
+}
+
+@keyframes toast-in {
+  from { transform: translate(-50%, 130%); }
+  to { transform: translate(-50%, 0); }
+}
+
+.foot { margin-top: 20px; padding: 0 4px; font-size: 12px; color: var(--dim); }
+.foot a { color: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

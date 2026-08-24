@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Duck Address Generator — DuckDuckGo Email Alias Manager | duckmail</title>
+<meta name="description" content="Generate @duck.com email aliases and keep track of every one you have made, across multiple DuckDuckGo Email Protection accounts. Add notes, search, back up, and restore. Runs entirely in your browser — tokens and addresses never leave your device.">
+<meta name="keywords" content="duck address generator, duckduckgo email, duck.com alias, email protection, email alias generator, disposable email, private email forwarding, duckduckgo email panel, multiple duck accounts, email alias manager">
+<meta name="author" content="Adnan Ahmad">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="format-detection" content="telephone=no">
+<link rel="canonical" href="https://viperadnan.com/pages/duckmail/">
+
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f0f4ff" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-title" content="duckmail">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="viperadnan Pages">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://viperadnan.com/pages/duckmail/">
+<meta property="og:title" content="Duck Address Generator — DuckDuckGo Email Alias Manager">
+<meta property="og:description" content="Generate @duck.com aliases across multiple DuckDuckGo accounts and keep a searchable record of every one. Runs in your browser; nothing leaves your device.">
+<meta property="og:image" content="https://api.microlink.io/?url=https://viperadnan.com/pages/duckmail/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="duckmail — a panel for generating and tracking DuckDuckGo email aliases">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@viperadn">
+<meta name="twitter:creator" content="@viperadn">
+<meta name="twitter:title" content="Duck Address Generator — DuckDuckGo Email Alias Manager">
+<meta name="twitter:description" content="Generate @duck.com aliases across multiple DuckDuckGo accounts and keep a searchable record of every one.">
+<meta name="twitter:image" content="https://api.microlink.io/?url=https://viperadnan.com/pages/duckmail/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+<meta name="twitter:image:alt" content="duckmail — a panel for generating and tracking DuckDuckGo email aliases">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233969ef'/><circle cx='16' cy='16' r='6' fill='%23fff'/></svg>">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cors.viperadnan.com">
+<link rel="dns-prefetch" href="https://quack.duckduckgo.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Martian+Mono:wght@400;600&display=swap">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "duckmail",
+  "alternateName": "Duck Address Generator",
+  "url": "https://viperadnan.com/pages/duckmail/",
+  "description": "Generate @duck.com email aliases and keep track of every one you have made, across multiple DuckDuckGo Email Protection accounts.",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any browser",
+  "browserRequirements": "Requires JavaScript and localStorage",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Generate @duck.com email aliases",
+    "Multiple DuckDuckGo accounts side by side",
+    "Searchable record of every generated address",
+    "Notes on individual addresses",
+    "Backup and restore as a JSON file",
+    "Data stored only in your browser"
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Adnan Ahmad",
+    "alternateName": "viperadnan",
+    "url": "https://viperadnan.com",
+    "sameAs": ["https://github.com/viperadnan-git", "https://x.com/viperadn", "https://instagram.com/viperadnan"]
+  }
+}
+</script>
+
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="device">
+    <img class="logo" src="https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/duckduckgo.svg" alt="" width="24" height="24">
+    <h1 class="wordmark">duckmail<span class="sr-only"> — Duck Address generator and alias manager for DuckDuckGo Email Protection</span></h1>
+    <span class="spacer"></span>
+    <div class="switch" id="theme" role="group" aria-label="Theme">
+      <button data-theme="light" aria-pressed="false">Light</button>
+      <button data-theme="system" aria-pressed="true">Auto</button>
+      <button data-theme="dark" aria-pressed="false">Dark</button>
+    </div>
+  </header>
+
+  <main class="rack">
+
+    <div class="rack split">
+      <section class="panel account">
+        <header>
+          <h2 class="legend">Account</h2>
+          <span class="spacer"></span>
+          <button class="btn small" id="settings-open">Settings</button>
+        </header>
+        <div class="strip" id="channels"></div>
+        <div class="identity" id="identity"></div>
+      </section>
+
+      <section class="panel">
+        <header><h2 class="legend">Generate</h2></header>
+        <div class="generator">
+          <div class="lcd">
+            <div class="lcd-head">
+              <span class="legend">Latest address</span>
+              <span class="legend" id="lcd-count"></span>
+            </div>
+            <button class="value idle" id="lcd" type="button" title="Copy to clipboard">—</button>
+          </div>
+          <button class="knob" id="generate"><span>New</span><span>address</span></button>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn small" id="copy-latest" disabled>Copy</button>
+          <button class="btn small" id="note-latest" disabled>Add note</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <header>
+        <h2 class="legend">Addresses <span id="count"></span></h2>
+      </header>
+      <div class="filters">
+        <input class="field" id="search" type="search" placeholder="Search addresses" aria-label="Search addresses">
+        <div class="select" id="scope">
+          <button class="field trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter by account">
+            <span id="scope-label">All accounts</span><span class="caret" aria-hidden="true"></span>
+          </button>
+          <div class="menu" role="listbox" aria-label="Filter by account" hidden></div>
+        </div>
+      </div>
+      <ul class="list" id="list"></ul>
+    </section>
+
+  </main>
+
+  <p class="foot">
+    Tokens and addresses stay in this browser. Requests reach
+    <a href="https://duckduckgo.com/email/">DuckDuckGo Email Protection</a> through a
+    CORS proxy — <a href="https://github.com/viperadnan-git/pages">source</a>.
+  </p>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- Sign in: passphrase flow -->
+<dialog id="signin">
+  <form method="dialog">
+    <div class="body">
+    <div class="title-row">
+      <h2>Add an account</h2>
+      <button class="close" value="cancel" formnovalidate aria-label="Close" title="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+    <p class="hint" id="si-hint">DuckDuckGo emails a passphrase to your forwarding address.</p>
+    <label class="stack" id="si-user-wrap">
+      <span class="legend">Duck username</span>
+      <input class="field" id="si-user" autocomplete="username" placeholder="yourname">
+    </label>
+    <label class="stack" id="si-otp-wrap" hidden>
+      <span class="legend">Passphrase from the email</span>
+      <input class="field" id="si-otp" autocomplete="one-time-code" placeholder="four random words">
+    </label>
+    <div class="alert" id="si-alert"></div>
+    </div>
+    <div class="row actions">
+      <button class="btn" id="si-paste" type="button" style="margin-right:auto">Paste a token</button>
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn primary" id="si-go" type="button">Send passphrase</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Sign in: paste an existing permanent token -->
+<dialog id="token">
+  <form method="dialog">
+    <div class="body">
+    <h2>Paste an access token</h2>
+    <p class="hint">The permanent token, not the login passphrase. It is checked the first time you generate an address.</p>
+    <label class="stack">
+      <span class="legend">Duck username</span>
+      <input class="field" id="tk-user" placeholder="yourname">
+    </label>
+    <label class="stack">
+      <span class="legend">Access token</span>
+      <input class="field mono" id="tk-token" placeholder="frfwn1v…">
+    </label>
+    <div class="alert" id="tk-alert"></div>
+    </div>
+    <div class="row actions">
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn primary" id="tk-go" type="button">Add account</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- One confirmation dialog, reused by every destructive action -->
+<dialog id="confirm">
+  <form method="dialog">
+    <div class="body">
+      <h2 id="cf-title"></h2>
+      <p class="hint" id="cf-body"></p>
+      <div class="checks" id="cf-option" hidden>
+        <label><input type="checkbox" id="cf-check"><span id="cf-check-label"></span></label>
+      </div>
+    </div>
+    <div class="row actions">
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn primary" id="cf-go" type="button">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Note on one address -->
+<dialog id="note">
+  <form method="dialog">
+    <div class="body">
+      <h2>Note</h2>
+      <p class="hint" id="nt-address"></p>
+      <label class="stack">
+        <span class="legend">What is this address for</span>
+        <textarea class="field" id="nt-text" rows="4" placeholder="Airline loyalty signup"></textarea>
+      </label>
+    </div>
+    <div class="row actions">
+      <button class="btn" id="nt-clear" type="button" style="margin-right:auto">Clear note</button>
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+      <button class="btn primary" id="nt-save" type="button">Save note</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Settings: general, backup, restore, clear -->
+<dialog id="settings">
+  <form method="dialog">
+    <div class="head">
+      <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="general" aria-selected="true">General</button>
+      <button type="button" role="tab" data-tab="backup" aria-selected="false">Backup</button>
+      <button type="button" role="tab" data-tab="restore" aria-selected="false">Restore</button>
+      <button type="button" role="tab" data-tab="clear" aria-selected="false">Clear</button>
+      </div>
+      <button class="close" value="close" formnovalidate aria-label="Close settings" title="Close"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+    </div>
+
+    <div class="body">
+    <section data-panel="general">
+      <label class="stack">
+        <span class="legend">CORS proxy</span>
+        <input class="field mono" id="st-proxy" spellcheck="false">
+      </label>
+      <p class="hint" style="margin-top:6px">DuckDuckGo blocks browser requests, so calls are relayed. The target URL is appended to this prefix.</p>
+
+      <p class="legend" style="margin:20px 0 8px">Session</p>
+      <p class="hint" id="st-session">No account signed in.</p>
+      <div class="row"><button class="btn" id="st-logout" type="button">Log out</button></div>
+    </section>
+
+    <section data-panel="backup" hidden>
+      <p class="hint">Everything is included by default, which is what a full restore needs. Access tokens travel with their accounts — an account without one cannot generate addresses.</p>
+      <div class="checks">
+        <label><input type="checkbox" id="bk-accounts" checked><span>Accounts<small>Usernames, access tokens, counts, forwarding address. Treat the file as a credential.</small></span></label>
+        <label><input type="checkbox" id="bk-addresses" checked><span>Addresses</span></label>
+        <label><input type="checkbox" id="bk-notes" checked><span>Notes</span></label>
+        <label><input type="checkbox" id="bk-settings" checked><span>Settings<small>Theme and proxy</small></span></label>
+      </div>
+      <div class="alert" id="bk-warn"></div>
+      <div class="row"><button class="btn primary" id="bk-export" type="button">Download backup</button></div>
+    </section>
+
+    <section data-panel="restore" hidden>
+      <p class="hint">Pick how a backup file meets what is already here.</p>
+      <div class="checks">
+        <label><input type="radio" name="rs-mode" value="merge" checked><span>Merge<small>Adds accounts and addresses that are missing, keeps the rest</small></span></label>
+        <label><input type="radio" name="rs-mode" value="replace"><span>Replace<small>Discards everything in this browser first</small></span></label>
+      </div>
+      <div class="row"><button class="btn primary" id="rs-pick" type="button">Choose a backup file</button></div>
+      <div class="alert" id="rs-alert"></div>
+      <input type="file" id="rs-file" accept="application/json,.json" hidden>
+    </section>
+
+    <section data-panel="clear" hidden>
+      <p class="hint">Each action affects this browser only. Your DuckDuckGo account and its aliases stay untouched.</p>
+      <div class="stackers">
+        <div class="row picker">
+          <div class="select" id="clear-scope">
+            <button class="field trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Which addresses to delete">
+              <span>All accounts</span><span class="caret" aria-hidden="true"></span>
+            </button>
+            <div class="menu" role="listbox" aria-label="Which addresses to delete" hidden></div>
+          </div>
+          <button class="btn danger" id="st-clear-addresses" type="button">Delete addresses</button>
+        </div>
+        <button class="btn danger" id="st-remove-account" type="button">Remove the current account</button>
+        <button class="btn danger" id="st-wipe" type="button">Erase everything</button>
+      </div>
+      <div class="alert" id="st-alert"></div>
+    </section>
+
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
