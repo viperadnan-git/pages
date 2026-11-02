@@ -24,14 +24,14 @@
     <meta name="apple-mobile-web-app-title" content="Pages">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://viperadnan-git.github.io/pages/">
+    <link rel="canonical" href="https://viperadnan.com/pages/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://viperadnan-git.github.io/pages/">
+    <meta property="og:url" content="https://viperadnan.com/pages/">
     <meta property="og:title" content="Pages | viperadnan — Utility Tools & Browser Applications">
     <meta property="og:description" content="A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.">
-    <meta property="og:image" content="https://api.microlink.io/?url=https://viperadnan-git.github.io/pages/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta property="og:image" content="https://viperadnan.com/pages/og.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -41,10 +41,10 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://viperadnan-git.github.io/pages/">
+    <meta name="twitter:url" content="https://viperadnan.com/pages/">
     <meta name="twitter:title" content="Pages | viperadnan — Utility Tools & Browser Applications">
     <meta name="twitter:description" content="A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.">
-    <meta name="twitter:image" content="https://api.microlink.io/?url=https://viperadnan-git.github.io/pages/&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1200&viewport.height=630&waitForTimeout=3000">
+    <meta name="twitter:image" content="https://viperadnan.com/pages/og.png">
     <meta name="twitter:image:alt" content="Pages by viperadnan — A collection of utility tools and browser-based applications">
     <meta name="twitter:site" content="@viperadn">
     <meta name="twitter:creator" content="@viperadn">
@@ -55,11 +55,9 @@
 
     <!-- Preconnect -->
     <link rel="preconnect" href="https://api.github.com" crossorigin>
-    <link rel="preconnect" href="https://api.microlink.io" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://api.github.com">
-    <link rel="dns-prefetch" href="https://api.microlink.io">
 
     <!-- Inter — single-typeface system, Styrene substitute -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -72,15 +70,10 @@
         "name": "Pages | viperadnan",
         "alternateName": "viperadnan Utility Pages",
         "description": "A collection of utility tools and browser-based applications. Powered by modern web technologies and free public APIs.",
-        "url": "https://viperadnan-git.github.io/pages/",
+        "url": "https://viperadnan.com/pages/",
         "inLanguage": "en-US",
         "author": { "@type": "Person", "name": "viperadnan", "url": "https://github.com/viperadnan-git" },
-        "publisher": { "@type": "Person", "name": "viperadnan" },
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": { "@type": "EntryPoint", "urlTemplate": "https://viperadnan-git.github.io/pages/?q={search_term_string}" },
-            "query-input": "required name=search_term_string"
-        }
+        "publisher": { "@type": "Person", "name": "viperadnan" }
     }
     </script>
     <script type="application/ld+json">
@@ -89,8 +82,8 @@
         "@type": "CollectionPage",
         "name": "Utility Pages Collection",
         "description": "Browse all available utility tools and browser-based applications",
-        "url": "https://viperadnan-git.github.io/pages/",
-        "isPartOf": { "@type": "WebSite", "name": "Pages | viperadnan", "url": "https://viperadnan-git.github.io/pages/" }
+        "url": "https://viperadnan.com/pages/",
+        "isPartOf": { "@type": "WebSite", "name": "Pages | viperadnan", "url": "https://viperadnan.com/pages/" }
     }
     </script>
 
@@ -493,6 +486,8 @@
                 <a href="https://github.com/viperadnan-git/pages" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <a href="https://github.com/viperadnan-git/pages/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
                 <a href="https://github.com/viperadnan-git" target="_blank" rel="noopener noreferrer">viperadnan</a>
+                <a href="privacy/">Privacy</a>
+                <a href="terms/">Terms</a>
             </nav>
             <p class="foot-copy">© <span id="year"></span> viperadnan</p>
         </div>
@@ -503,9 +498,7 @@
             owner: 'viperadnan-git',
             repo: 'pages',
             branch: 'main',
-            baseUrl: 'https://viperadnan-git.github.io/pages',
             apiBase: 'https://api.github.com',
-            microlink: 'https://api.microlink.io',
             excludeDirs: ['.github', 'node_modules', 'assets', 'css', 'js', 'images', 'docs'],
             indexFiles: ['index.html', 'index.htm', 'index.md']
         };
@@ -549,8 +542,6 @@
             if (diff < 365) return Math.floor(diff / 30) + 'mo ago';
             return Math.floor(diff / 365) + 'y ago';
         };
-        const screenshotUrl = (url) =>
-            `${CONFIG.microlink}/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
 
         /* ---------- API ---------- */
         const fetchJSON = async (url) => {
@@ -566,17 +557,24 @@
         const fetchTree = () => fetchJSON(`${CONFIG.apiBase}/repos/${CONFIG.owner}/${CONFIG.repo}/git/trees/${CONFIG.branch}?recursive=1`);
         const fetchCommit = (path) => fetchJSON(`${CONFIG.apiBase}/repos/${CONFIG.owner}/${CONFIG.repo}/commits?path=${path}&per_page=1`).catch(() => []);
 
-        // og image + title + description (no screenshot — fast)
+        // Pages share this origin, so read each page's own meta tags.
         const fetchMeta = async (url) => {
             try {
-                const { data } = await fetchJSON(`${CONFIG.microlink}?url=${encodeURIComponent(url)}`);
-                return { title: data?.title || null, description: data?.description || null, image: data?.image?.url || null };
+                const res = await fetch(url);
+                if (!res.ok) throw 0;
+                const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+                const get = (sel) => doc.querySelector(sel)?.getAttribute('content') || null;
+                const image = get('meta[property="og:image"]');
+                return {
+                    description: get('meta[name="description"]') || get('meta[property="og:description"]'),
+                    image: image && new URL(image, url).href
+                };
             } catch {
-                return { title: null, description: null, image: null };
+                return { description: null, image: null };
             }
         };
 
-        /* ---------- Preview: og image → screenshot → placeholder ---------- */
+        /* ---------- Preview: og image → placeholder ---------- */
         const tryLoad = (src) => new Promise((res) => {
             if (!src) return res(false);
             const t = new Image();
@@ -586,16 +584,11 @@
         });
         const loadPreview = async (page, img, ph) => {
             if (!img) return;
-            const candidates = [page.meta?.image, screenshotUrl(page.url)];
-            for (const src of candidates) {
-                if (await tryLoad(src)) {
-                    img.src = src;
-                    img.classList.add('is-loaded');
-                    if (ph) ph.classList.add('hidden');
-                    return;
-                }
-            }
-            // all failed → keep placeholder
+            const src = page.meta?.image;
+            if (!(await tryLoad(src))) return;
+            img.src = src;
+            img.classList.add('is-loaded');
+            if (ph) ph.classList.add('hidden');
         };
 
         /* ---------- Pages from tree ---------- */
@@ -613,7 +606,7 @@
             return [...dirs].map(dir => ({
                 name: dir.split('/').pop(),
                 path: dir,
-                url: `${CONFIG.baseUrl}/${dir}/`,
+                url: new URL(`${dir}/`, location.href).href,
                 lastModified: null,
                 meta: null
             }));
