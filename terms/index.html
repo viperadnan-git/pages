@@ -83,17 +83,15 @@
     <header class="bar">
         <div class="bar-inner">
             <a class="owner" href="https://viperadnan.com/">Adnan Ahmad</a>
-            <div class="bar-end">
-                <nav aria-label="Legal documents">
-                    <ul class="docs">
-                        <li><a href="../privacy/">Privacy</a></li>
-                        <li><a href="../terms/" aria-current="page">Terms</a></li>
-                        <li><a href="../security/">Security</a></li>
-                        <li><a href="../copyright/">Copyright</a></li>
-                    </ul>
-                </nav>
-                <button class="btn" type="button" data-theme-toggle hidden>System theme</button>
-            </div>
+            <nav class="docs-nav" aria-label="Legal documents">
+                <ul class="docs">
+                    <li><a href="../privacy/">Privacy</a></li>
+                    <li><a href="../terms/" aria-current="page">Terms</a></li>
+                    <li><a href="../security/">Security</a></li>
+                    <li><a href="../copyright/">Copyright</a></li>
+                </ul>
+            </nav>
+            <button class="theme" type="button" data-theme-toggle hidden><svg class="i-system" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="2.25" width="12.5" height="8.5" rx="1.5"/><path d="M5.5 13.75h5M8 10.75v3"/></svg><svg class="i-light" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.75"/><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M3.23 12.77l1.06-1.06M11.71 4.29l1.06-1.06"/></svg><svg class="i-dark" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.75 9.9A5.9 5.9 0 0 1 6.1 2.25a5.9 5.9 0 1 0 7.65 7.65Z"/></svg><span>System theme</span></button>
         </div>
     </header>
 
@@ -124,11 +122,13 @@
 
         <main class="doc" id="main">
             <h1>Terms of Use</h1>
-            <dl class="meta">
-                <div><dt>Effective</dt><dd><time datetime="2026-11-02">2 November 2026</time></dd></div>
-                <div><dt>Version</dt><dd>1.0</dd></div>
-                <button class="btn" type="button" data-print hidden>Print or save as PDF</button>
-            </dl>
+            <div class="doc-head">
+                <dl class="meta">
+                    <div><dt>Effective</dt><dd><time datetime="2026-11-02">2 November 2026</time></dd></div>
+                    <div><dt>Version</dt><dd>1.0</dd></div>
+                </dl>
+                <button class="print" type="button" data-print hidden><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M4.5 6V1.75h7V6"/><rect x="1.75" y="6" width="12.5" height="6" rx="1.5"/><path d="M4.5 10h7v4.25h-7z" fill="var(--bg)"/></svg><span>Print or save as PDF</span></button>
+            </div>
 
             <div class="summary">
                 <h2>In short</h2>
@@ -266,16 +266,27 @@
 
             <section id="contact">
                 <h2>Contact <a class="anchor" href="#contact" aria-label="Link to this section">#</a></h2>
-                <p>Questions about these terms: <a href="mailto:legal@viperadnan.com">legal@viperadnan.com</a>. If our domain changes, use the address in the latest version of this page. If an email bounces, use the backup address at the bottom of this page.</p>
+                <p>Questions about these terms: <a href="mailto:legal@viperadnan.com">legal@viperadnan.com</a>. If our domain changes, use the address in the latest version of this page. If an email bounces, see “Can't reach us?” at the bottom of this page.</p>
             </section>
         </main>
     </div>
 
     <footer class="foot">
-        <div class="bar-inner">
-            <span>© 2026 Adnan Ahmad</span>
-            <a href="https://github.com/viperadnan-git/pages/tree/main/terms">Source and history</a>
-            <p class="fallback">If an email to one of our addresses bounces, or our domain is unavailable, use our backup address: <button class="btn" type="button" data-reveal-email="bW9jLmxpYW1nQG5hbmRhcmVwaXY=" hidden>Show backup email</button><noscript>enable JavaScript to see it, or open an issue at <a href="https://github.com/viperadnan-git/pages/issues">github.com/viperadnan-git/pages</a>.</noscript></p>
+        <div class="foot-inner">
+            <section class="reach" aria-labelledby="reach-title">
+                <div>
+                    <h2 id="reach-title">Can't reach us?</h2>
+                    <p>If an email to one of our addresses bounces, or our domain stops working, write to us directly instead.</p>
+                </div>
+                <div class="reach-action" data-reveal>
+                    <button class="btn" type="button" data-reveal-email="bW9jLmxpYW1nQG5hbmRhcmVwaXY=" hidden>Show email address</button>
+                    <noscript>Turn on JavaScript to see the address, or open an issue at <a href="https://github.com/viperadnan-git/pages/issues">github.com/viperadnan-git/pages</a>.</noscript>
+                </div>
+            </section>
+            <div class="foot-meta">
+                <span>© 2026 Adnan Ahmad</span>
+                <a href="https://github.com/viperadnan-git/pages/tree/main/terms">Source and history</a>
+            </div>
         </div>
     </footer>
 </body>

@@ -8,8 +8,10 @@ const LABELS = { system: 'System theme', light: 'Light theme', dark: 'Dark theme
 const themeButton = document.querySelector('[data-theme-toggle]');
 if (themeButton) {
     let current = document.documentElement.dataset.theme || 'system';
+    const label = themeButton.querySelector('span');
     const show = () => {
-        themeButton.textContent = LABELS[current];
+        label.textContent = LABELS[current];
+        themeButton.dataset.mode = current;
         themeButton.setAttribute('aria-label', `${LABELS[current]}. Change theme`);
     };
     themeButton.hidden = false;
@@ -29,6 +31,10 @@ if (themeButton) {
 // Contents: open on wide screens, and mark the section being read
 const toc = document.querySelector('.toc details');
 if (toc && matchMedia('(min-width: 961px)').matches) toc.open = true;
+// On narrow screens, close the list once a section is picked
+toc?.addEventListener('click', (e) => {
+    if (e.target.closest('a') && !matchMedia('(min-width: 961px)').matches) toc.open = false;
+});
 
 const tocLinks = new Map([...document.querySelectorAll('.toc a')].map((a) => [a.hash.slice(1), a]));
 const observer = new IntersectionObserver((entries) => {
@@ -51,16 +57,29 @@ if (printButton) {
     printButton.addEventListener('click', () => window.print());
 }
 
-// Backup email: stored reversed + base64 so it isn't in the page source as plain text
+// "Can't reach us?" address: stored reversed + base64 so it isn't in the page source as plain text
 const reveal = document.querySelector('[data-reveal-email]');
 if (reveal) {
     reveal.hidden = false;
     reveal.addEventListener('click', () => {
         const address = atob(reveal.dataset.revealEmail).split('').reverse().join('');
         const link = document.createElement('a');
+        link.className = 'address';
         link.href = `mailto:${address}`;
         link.textContent = address;
-        reveal.replaceWith(link);
+        const copy = document.createElement('button');
+        copy.className = 'btn';
+        copy.type = 'button';
+        copy.textContent = 'Copy';
+        copy.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(address);
+                copy.textContent = 'Copied';
+            } catch {
+                copy.textContent = 'Select and copy it';
+            }
+        });
+        reveal.replaceWith(link, copy);
         link.focus();
     });
 }

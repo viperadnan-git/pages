@@ -87,7 +87,7 @@ summary:focus-visible {
     top: 12px;
 }
 
-/* Site bar */
+/* Site bar: one row when wide; name + theme, then the documents, when narrow */
 .bar {
     border-bottom: 1px solid var(--rule);
     font: 14px/1.4 var(--sans);
@@ -96,30 +96,37 @@ summary:focus-visible {
 .bar-inner {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 16px 24px;
-    display: flex;
-    flex-wrap: wrap;
+    padding: 14px 24px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "owner nav theme";
     align-items: center;
-    justify-content: space-between;
-    gap: 8px 24px;
+    gap: 8px 28px;
 }
 
 .owner {
+    grid-area: owner;
     color: var(--text);
     font-weight: 600;
     text-decoration: none;
 }
 
+.docs-nav {
+    grid-area: nav;
+    justify-self: end;
+}
+
 .docs {
     display: flex;
-    flex-wrap: wrap;
-    gap: 4px 20px;
+    gap: 4px 24px;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
 .docs a {
+    display: block;
+    padding: 6px 0;
     color: var(--muted);
     text-decoration: none;
 }
@@ -128,11 +135,92 @@ summary:focus-visible {
     color: var(--text);
 }
 
-.bar-end {
-    display: flex;
-    flex-wrap: wrap;
+.theme {
+    grid-area: theme;
+}
+
+.theme,
+.print {
+    display: inline-flex;
     align-items: center;
-    gap: 8px 24px;
+    gap: 8px;
+    min-height: 32px;
+    padding: 0 10px;
+    font: 14px/1 var(--sans);
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    cursor: pointer;
+    flex: none;
+}
+
+/* show the icon for the current mode */
+.theme svg {
+    display: none;
+}
+
+.theme[data-mode="system"] .i-system,
+.theme[data-mode="light"] .i-light,
+.theme[data-mode="dark"] .i-dark {
+    display: block;
+}
+
+.theme:hover,
+.print:hover {
+    color: var(--text);
+    border-color: var(--muted);
+}
+
+.theme:focus-visible,
+.print:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+}
+
+.theme svg,
+.print svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+}
+
+@media (max-width: 720px) {
+    .bar-inner {
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "owner theme" "nav nav";
+        padding-bottom: 0;
+    }
+
+    .docs-nav {
+        justify-self: stretch;
+        border-top: 1px solid var(--rule);
+    }
+
+    .docs {
+        justify-content: space-between;
+    }
+
+    .docs a {
+        padding: 12px 0;
+    }
+
+    /* icon only; the label stays for screen readers */
+    .theme {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .theme span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
 }
 
 .btn {
@@ -171,20 +259,51 @@ summary:focus-visible {
     gap: 64px;
 }
 
-/* Contents */
+/* Contents: a rail of sections; the one being read is marked on the rail */
 .toc {
-    font: 14px/1.5 var(--sans);
+    font: 14px/1.45 var(--sans);
 }
 
 .toc details {
     position: sticky;
     top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .toc summary {
-    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-weight: 600;
+    color: var(--text);
     cursor: pointer;
-    margin-bottom: 12px;
+    list-style: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.toc summary::-webkit-details-marker {
+    display: none;
+}
+
+/* chevron: points down when closed, up when open */
+.toc summary::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-right: 4px;
+    border-right: 1.5px solid var(--muted);
+    border-bottom: 1.5px solid var(--muted);
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform .15s ease;
+}
+
+.toc details[open] summary::after {
+    transform: translateY(2px) rotate(-135deg);
 }
 
 .toc ol {
@@ -192,30 +311,49 @@ summary:focus-visible {
     padding: 0;
     list-style: none;
     counter-reset: toc;
+    border-left: 1px solid var(--rule);
 }
 
 .toc li {
     counter-increment: toc;
-    display: flex;
-    gap: 10px;
-    padding: 3px 0;
-}
-
-.toc li::before {
-    content: counter(toc);
-    min-width: 1.4em;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
 }
 
 .toc a {
-    color: var(--text);
+    position: relative;
+    display: flex;
+    gap: 10px;
+    padding: 5px 0 5px 14px;
+    color: var(--muted);
     text-decoration: none;
 }
 
-.toc a:hover,
+.toc a::before {
+    content: counter(toc);
+    flex: none;
+    width: 2ch;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    opacity: .75;
+}
+
+.toc a:hover {
+    color: var(--text);
+}
+
 .toc a.is-current {
-    color: var(--link);
+    color: var(--text);
+    font-weight: 500;
+}
+
+/* the marker sits on the rail */
+.toc a.is-current::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--text);
 }
 
 /* Document */
@@ -227,11 +365,20 @@ summary:focus-visible {
     margin: 0 0 12px;
 }
 
+/* Dates and print: one row at every width */
+.doc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin: 0 0 40px;
+}
+
 .meta {
     display: flex;
     flex-wrap: wrap;
     gap: 4px 24px;
-    margin: 0 0 40px;
+    margin: 0;
     font: 14px/1.5 var(--sans);
     color: var(--muted);
 }
@@ -244,12 +391,6 @@ summary:focus-visible {
 .meta dd {
     margin: 0;
     color: var(--text);
-}
-
-.meta .btn {
-    margin-left: auto;
-    font-size: 13px;
-    padding: 2px 10px;
 }
 
 /* The one bold element: plain-language commitments set large */
@@ -332,6 +473,13 @@ h2:hover .anchor,
     margin: 0 0 16px;
 }
 
+/* avoid a lone word on the last line; ignored where unsupported */
+.doc p,
+.doc li,
+.reach p {
+    text-wrap: pretty;
+}
+
 .doc li + li {
     margin-top: 6px;
 }
@@ -382,29 +530,74 @@ td:first-child {
 }
 
 /* Footer */
-.fallback {
-    flex-basis: 100%;
-    margin: 0;
-}
-
-.fallback .btn {
-    margin-left: 4px;
-    padding: 1px 8px;
-    font-size: 13px;
-}
-
 .foot {
     border-top: 1px solid var(--rule);
     font: 14px/1.5 var(--sans);
     color: var(--muted);
 }
 
-.foot .bar-inner {
-    padding-block: 24px;
+.foot-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.reach {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px 32px;
+    padding: 20px 24px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+}
+
+.reach h2 {
+    margin: 0 0 4px;
+    font: 600 15px/1.4 var(--sans);
+    color: var(--text);
+}
+
+.reach p {
+    margin: 0;
+    max-width: 60ch;
+}
+
+.reach-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.reach-action .btn {
+    padding: 7px 14px;
+    color: var(--text);
+}
+
+.reach-action .address {
+    font: 15px/1.4 var(--sans);
+    color: var(--link);
+    overflow-wrap: anywhere;
+}
+
+.foot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: 24px;
 }
 
 .foot a {
     color: var(--muted);
+}
+
+@media (max-width: 720px) {
+    .reach {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 18px;
+    }
 }
 
 @media (max-width: 960px) {
@@ -417,23 +610,20 @@ td:first-child {
     .toc {
         border: 1px solid var(--rule);
         border-radius: 6px;
-        padding: 12px 16px;
     }
 
     .toc details {
         position: static;
+        max-height: none;
     }
 
     .toc summary {
         margin: 0;
+        padding: 14px 16px;
     }
 
-    .toc details[open] summary {
-        margin-bottom: 12px;
-    }
-
-    .toc {
-        order: 0;
+    .toc ol {
+        margin: 0 16px 14px;
     }
 }
 
@@ -444,8 +634,20 @@ td:first-child {
 }
 
 @media (max-width: 560px) {
-    .meta .btn {
-        margin-left: 0;
+    .print {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .print span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
     }
 
     body {
@@ -462,19 +664,25 @@ td:first-child {
 }
 
 @media print {
-    :root {
+    /* paper is always light: outranks the dark theme selectors above */
+    :root,
+    :root[data-theme] {
         --bg: #fff;
         --text: #000;
         --muted: #444;
+        --rule: #ddd;
         --link: #000;
+        color-scheme: light;
     }
 
     .bar,
     .toc,
     .anchor,
     .btn,
+    .theme,
+    .print,
     .skip,
-    .fallback {
+    .reach {
         display: none;
     }
 
