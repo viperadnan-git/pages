@@ -17,7 +17,9 @@ export function bill(i) {
   const net = Math.max(0, n(i.gross) - n(i.stoneWt));
   const gold = r(net * n(i.rate));
   const wastage = r((gold * n(i.wastagePct)) / 100);
-  const makingFull = r(i.makingMode === 'pct' ? (gold * n(i.making)) / 100 : i.makingMode === 'gram' ? net * n(i.making) : n(i.making));
+  const makingFull = r(
+    i.makingMode === 'pct' ? (gold * n(i.making)) / 100 : i.makingMode === 'gram' ? net * n(i.making) : n(i.making),
+  );
   const discount = r((makingFull * Math.min(100, n(i.discountPct))) / 100);
   const making = makingFull - discount;
   const taxable = gold + wastage + making + r(n(i.stoneValue)) + r(n(i.hallmark));
@@ -27,13 +29,13 @@ export function bill(i) {
   return { net, gold, wastage, makingFull, discount, making, taxable, gst, total, oldValue, payable: total - oldValue };
 }
 
-// Largest net weight (to 1 mg) whose payable fits the budget. Solves the linear bill, then steps
-// by 1 mg to absorb per-line rounding.
+// Largest net weight (1 mg steps) within budget; the steps absorb per-line rounding.
 export function maxNet(budget, i) {
   const d = 1 - Math.min(100, n(i.discountPct)) / 100;
   const rate = n(i.rate);
   const perGram =
-    rate * (1 + n(i.wastagePct) / 100) + (i.makingMode === 'pct' ? (rate * n(i.making) * d) / 100 : i.makingMode === 'gram' ? n(i.making) * d : 0);
+    rate * (1 + n(i.wastagePct) / 100) +
+    (i.makingMode === 'pct' ? (rate * n(i.making) * d) / 100 : i.makingMode === 'gram' ? n(i.making) * d : 0);
   if (perGram <= 0) return 0;
   const fixed = n(i.stoneValue) + n(i.hallmark) + (i.makingMode === 'flat' ? n(i.making) * d : 0);
   const oldValue = n(i.oldWeight) * n(i.oldRate) * (1 - Math.min(100, n(i.oldDeductPct)) / 100);
@@ -44,8 +46,8 @@ export function maxNet(budget, i) {
   return mg > 0 && fits(mg) ? mg / 1000 : 0;
 }
 
-// Reverse of bill(). GST and making stated on the bill win (0 included); otherwise GST is gstPct
-// and making is the remainder. What stated making leaves unexplained is `other`.
+// Reverse of bill(): stated GST/making win (0 included), else GST is gstPct and making the remainder.
+// Whatever stated making leaves unexplained is `other`.
 export function fromTotal(total, i) {
   const net = Math.max(0, n(i.gross) - n(i.stoneWt));
   const gold = r(net * n(i.rate));
@@ -56,6 +58,19 @@ export function fromTotal(total, i) {
   const gst = i.gstAmount != null ? r(n(i.gstAmount)) : sum - r(sum / (1 + n(i.gstPct) / 100));
   const taxable = sum - gst;
   const rest = taxable - gold - wastage - stones - hallmark;
-  const making = i.makingPct != null ? r((gold * n(i.makingPct)) / 100) : i.makingAmount != null ? r(n(i.makingAmount)) : rest;
-  return { net, gold, wastage, stones, hallmark, making, other: rest - making, taxable, gst, gstPct: taxable > 0 ? (gst / taxable) * 100 : 0, total: sum };
+  const making =
+    i.makingPct != null ? r((gold * n(i.makingPct)) / 100) : i.makingAmount != null ? r(n(i.makingAmount)) : rest;
+  return {
+    net,
+    gold,
+    wastage,
+    stones,
+    hallmark,
+    making,
+    other: rest - making,
+    taxable,
+    gst,
+    gstPct: taxable > 0 ? (gst / taxable) * 100 : 0,
+    total: sum,
+  };
 }
