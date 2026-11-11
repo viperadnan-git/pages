@@ -8,6 +8,9 @@ const f2 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
 const f3 = new Intl.NumberFormat('en-IN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 const inr = (v) => (v < -0.5 ? '−' : '') + '₹' + f0.format(Math.abs(Math.round(v)));
 const pct = (v) => f2.format(v) + '%';
+const f1 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 1 });
+const pct1 = (v) => f1.format(v) + '%';
+const sentence = (t) => t.charAt(0).toUpperCase() + t.slice(1) + '.';
 const lakh = (v) => (v >= 1e7 ? `${f2.format(v / 1e7)} crore` : v >= 1e5 ? `${f2.format(v / 1e5)} lakh` : '');
 const short = (v) => (v >= 1e5 ? `₹${lakh(v)}` : inr(v));
 const num = (el) => parseFloat(String(el.value).replace(/,/g, '')) || 0;
@@ -22,24 +25,57 @@ const MAKING_KEYS = {
 };
 const PANELS = ['more', 'old', 'src'];
 
-// What value-conscious buyers pay, as % of gold value (machine-made chains 6-10%, local plain 22K
-// from about 5% and 8-15% negotiable, brands 12-20%, rings and detailed work 14-25%).
-const MAKING_BANDS = [
-  [6, 'good', 'a very good deal; this is what plain, machine-made pieces go for'],
-  [12, '', 'a fair price for plain 22K jewellery at a local shop'],
-  [20, 'bad', 'on the high side, like branded stores. Ask for a lower making charge'],
-  [Infinity, 'bad', 'high; only intricate, handmade or bridal pieces usually cost this much. Ask for a lower rate'],
-];
-const makingVerdict = (p) => MAKING_BANDS.find(([max]) => p <= max);
+// Market norms: 24K coins 0.5-3%, plain 22K 5-15%, 18K and lower (mostly studded) 15-24%.
+const MAKING_BANDS = {
+  coin: [
+    [2, 'good', 'low for a 24K coin or bar'],
+    [3, '', 'within the usual 0.5% to 3% for a 24K coin or bar'],
+    [8, 'bad', 'high for a 24K coin or bar, which usually costs 0.5% to 3% to make. Compare with a bank or another jeweller'],
+    [Infinity, 'bad', 'very high for 24K gold. Coins and bars usually cost 0.5% to 3% to make; ask what this charge covers'],
+  ],
+  plain: [
+    [6, 'good', 'a very good deal for {k} jewellery; plain machine-made pieces go for about this much'],
+    [12, '', 'a fair price for plain {k} jewellery at a local shop'],
+    [20, 'bad', 'on the high side for {k}, like branded stores. Ask for a lower making charge'],
+    [Infinity, 'bad', 'high for {k}; only intricate, handmade or bridal pieces usually cost this much. Ask for a lower rate'],
+  ],
+  studded: [
+    [10, 'good', 'low for {k} jewellery, which usually costs more to make than 22K'],
+    [16, '', 'a fair price for {k} jewellery'],
+    [24, '', 'usual for diamond or studded {k} work, but high for a plain piece. If it has no stones, ask for less'],
+    [Infinity, 'bad', 'high even for diamond or studded {k} work, which usually costs 15% to 24% to make. Ask for a lower rate'],
+  ],
+};
+const bandFor = (k) => (k === '24' ? 'coin' : k === '22' || k === '20' ? 'plain' : 'studded');
+const makingVerdict = (p, k) => {
+  const [, tone, text] = MAKING_BANDS[bandFor(k)].find(([max]) => p <= max);
+  return [tone, text.replaceAll('{k}', `${k}K`)];
+};
+// Shop rates in one city vary by about 1%: smaller gaps, or under ₹500 on the piece, are noise.
+const RATE_NOISE_PCT = 1, RATE_FLAG_PCT = 3, RATE_NOISE_RS = 500;
+const BUYBACK_CUT = 0.03;
+function rateGap(diff, live, impact) {
+  const gap = live > 0 ? (diff / live) * 100 : 0;
+  if (Math.abs(gap) < RATE_NOISE_PCT || Math.abs(impact) < RATE_NOISE_RS) return { level: 'same', gap };
+  if (gap < 0) return { level: 'below', gap };
+  return { level: gap >= RATE_FLAG_PCT ? 'high' : 'above', gap };
+}
 
-// Form state
+const MAKING_PCT_HINT = {
+  coin: '24K coins and bars usually cost 0.5% to 3% to make.',
+  plain: 'Plain {k} jewellery at local shops is usually 6% to 12%; branded stores often charge 12% to 20%. Ask if wastage is extra.',
+  studded: '{k} jewellery is often diamond or studded and usually costs 15% to 24% to make; plain {k} pieces should cost less.',
+};
+
 const fields = [...form.querySelectorAll('[data-k]')];
 const gather = () => {
   const o = {};
   for (const el of fields) if (el.type !== 'radio' || el.checked) o[el.name || el.id] = el.value;
   return o;
 };
-const DEFAULTS = gather();
+// Defaults from the markup itself; the pre-paint script may already have changed what's checked.
+const DEFAULTS = {};
+for (const el of fields) if (el.type !== 'radio' || el.defaultChecked) DEFAULTS[el.name || el.id] = el.type === 'radio' ? el.value : el.defaultValue;
 const apply = (o) => {
   for (const el of fields) {
     const v = o[el.name || el.id];
@@ -51,53 +87,54 @@ const apply = (o) => {
   for (const el of fields) if (el.type === 'radio' && !form.elements[el.name].value && el.value === DEFAULTS[el.name]) el.checked = true;
 };
 
-// Only these choices are remembered; amounts and rates start fresh each visit.
-const KEEP = ['karat', 'rateK', 'mode'];
+const KEEP = ['karat', 'rateK', 'mode', 'rateUnit'];
 const pick = (f = {}) => Object.fromEntries(KEEP.filter((k) => f[k] != null).map((k) => [k, f[k]]));
 let S = {};
 try { const o = JSON.parse(localStorage.getItem(KEY)) || {}; S = { f: pick(o.f), live: o.live }; } catch {}
-const save = () => { if (!viewingShared) try { localStorage.setItem(KEY, JSON.stringify({ f: pick(S.f), live: S.live })); } catch {} };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ f: pick(S.f), live: S.live })); } catch {} };
 
-// Share links: short keys, digits only, defaults left out. e.g. #k=22&w=10&r=14300-24&d=261111
-const SHORT = { karat: 'k', gross: 'w', budget: 'b', wastagePct: 'wa', discountPct: 'ds', stoneWt: 'sw', stoneValue: 'sv', hallmark: 'hm', gstPct: 'gst', oldKarat: 'ok', oldWeight: 'ow', oldDeductPct: 'ol', final: 'f' };
+// URL state: short keys, digits only, defaults left out, e.g. ?k=18&w=10&f=125000&r=10700-18&d=261111.
+const SHORT = { karat: 'k', rateK: 'rk', rateUnit: 'ru', gross: 'w', budget: 'b', wastagePct: 'wa', discountPct: 'ds', stoneWt: 'sw', stoneValue: 'sv', hallmark: 'hm', gstPct: 'gst', oldKarat: 'ok', oldWeight: 'ow', oldDeductPct: 'ol', final: 'f' };
 const MODE_SUFFIX = { pct: '', gram: 'pg', flat: 'fx' };
 const digits = (v) => (/^\d+(\.\d+)?$/.test(v || '') ? v : null);
+const yymmdd = (t) => { const d = new Date(t); return `${String(d.getFullYear() % 100).padStart(2, '0')}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`; };
 
-// A shared link opens that bill without touching the saved one until the visitor edits it.
-let viewingShared = false;
 {
-  const h = new URLSearchParams(location.hash.slice(1));
-  const r = /^(\d+(?:\.\d+)?)(?:-(\d+))?$/.exec(h.get('r') || '');
-  const rk = r?.[2] || '22';
-  if (r && PURITY[rk] && +r[1] > 0) {
-    const f = { ...DEFAULTS, rateK: rk };
-    for (const [name, key] of Object.entries(SHORT)) if (digits(h.get(key))) f[name] = h.get(key);
-    f.mode = h.has('b') ? 'budget' : h.has('f') ? 'check' : 'price';
-    const ma = /^(\d+(?:\.\d+)?)(r?)$/.exec(h.get('ma') || '');
-    if (ma) { f.makingAmount = ma[1]; f.makingUnit = ma[2] ? 'rs' : 'pct'; }
-    const mk = /^(\d+(?:\.\d+)?)(pg|fx)?$/.exec(h.get('mk') || '');
+  // Older links carried the state in the hash; read those too and move them to the query.
+  const legacy = !location.search && location.hash.includes('=');
+  const q = new URLSearchParams(legacy ? location.hash.slice(1) : location.search);
+  if ([...q.keys()].length) {
+    const f = { ...DEFAULTS };
+    for (const [name, key] of Object.entries(SHORT)) if (digits(q.get(key))) f[name] = q.get(key);
+    const m = q.get('m');
+    f.mode = /^(check|price|budget)$/.test(m) ? m : q.has('b') ? 'budget' : q.has('f') ? 'check' : legacy ? 'price' : DEFAULTS.mode;
+    f.gstUnit = q.has('ga') || q.get('gu') === 'rs' ? 'rs' : 'pct';
+    const ma = /^(\d+(?:\.\d+)?)(r?)$/.exec(q.get('ma') || '');
+    f.makingUnit = ma?.[2] || q.get('mu') === 'rs' ? 'rs' : 'pct';
+    const mk = /^(\d+(?:\.\d+)?)(pg|fx)?$/.exec(q.get('mk') || '');
     if (mk) { f.making = mk[1]; f.makingMode = mk[2] === 'pg' ? 'gram' : mk[2] === 'fx' ? 'flat' : 'pct'; }
-    const d = /^(\d\d)(\d\d)(\d\d)$/.exec(h.get('d') || '');
+    const r = /^(\d+(?:\.\d+)?)(?:-(\d+))?$/.exec(q.get('r') || '');
+    const rk = r?.[2] || '22';
+    const d = /^(\d\d)(\d\d)(\d\d)$/.exec(q.get('d') || '');
     S = {
       live: S.live, f,
-      custom: { k: rk, rate: +r[1], at: d ? new Date(2000 + +d[1], d[2] - 1, +d[3], 12).getTime() : undefined, shared: true },
-      oldCustom: +digits(h.get('or')) || null,
-      gstCustom: digits(h.get('ga')) != null ? +h.get('ga') : null,
-      open: { more: ['wa', 'ds', 'sw', 'sv', 'hm', 'gst'].some((k) => h.has(k)), old: h.has('ow') },
+      custom: r && PURITY[rk] && +r[1] > 0 ? { k: rk, rate: +r[1], at: d ? new Date(2000 + +d[1], d[2] - 1, +d[3], 12).getTime() : undefined } : null,
+      oldCustom: +digits(q.get('or')) || null,
+      makingCustom: ma ? +ma[1] : null,
+      gstCustom: digits(q.get('gp')) != null ? +q.get('gp') : digits(q.get('ga')) != null ? +q.get('ga') : null,
+      open: { more: ['wa', 'ds', 'sw', 'sv', 'hm', 'gst'].some((k) => q.has(k)), old: q.has('ow') },
     };
-    viewingShared = true;
-    $('shared').hidden = false;
   }
 }
-addEventListener('hashchange', () => { if (/(^|&)r=/.test(location.hash.slice(1))) location.reload(); });
 if (S.f) apply(S.f);
 for (const id of PANELS) if (S.open?.[id]) $(id).open = true;
+for (const el of form.querySelectorAll('input[data-fmt]')) if (el.value) el.value = f2.format(num(el));
 
 let liveState = S.live ? 'stale' : 'loading';
 const val = (name) => form.elements[name].value;
 const liveBase = () => (S.live ? landed(S.live.inrOz, num($('duty')), num($('premium'))) : 0);
 
-// Every karat's rate comes from one source rate: the one typed (for any karat), or today's live rate.
+// All karat rates derive from one source: the typed rate (any karat) or today's live rate.
 function source() {
   if (S.custom) return { k: S.custom.k, r: S.custom.rate };
   const k = val('rateK');
@@ -121,6 +158,7 @@ function line(op, label, sub, amount, cls = '') {
 }
 
 let last = null;
+let lastCheck = null;
 let makingMode = null;
 
 function render() {
@@ -132,8 +170,8 @@ function render() {
   const oldK = val('oldKarat');
   const oldRate = S.oldCustom ?? rateOf(oldK, src);
 
-  // Rate card
-  setField($('rate'), rateOf(rk, src), S.custom?.k === rk ? f2 : f0);
+  const per = Number(val('rateUnit')) || 1;
+  setField($('rate'), rateOf(rk, src) * per, S.custom?.k === rk ? f2 : f0);
   setField($('oldRate'), oldRate, S.oldCustom != null ? f2 : f0);
   $('oldUseLive').hidden = S.oldCustom == null;
   $('useLiveRow').hidden = !S.custom || !S.live;
@@ -143,8 +181,8 @@ function render() {
   if (S.custom) {
     const dated = Number.isFinite(S.custom.at);
     const fresh = dated && today(S.custom.at);
-    status.dataset.s = fresh && !S.custom.shared ? 'custom' : 'stale';
-    status.textContent = S.custom.shared ? `Shared rate${dated ? `, ${day(S.custom.at)}` : ''}` : fresh ? 'Your rate' : dated ? `Your rate, ${day(S.custom.at)}` : 'Your saved rate';
+    status.dataset.s = fresh ? 'custom' : 'stale';
+    status.textContent = fresh ? 'Your rate' : dated ? `Your rate, ${day(S.custom.at)}` : 'Your saved rate';
     if (S.custom.k !== rk) notes.push(`Worked out from the ${S.custom.k}K rate of <b>${inr(S.custom.rate)}</b>.`);
     if (!fresh) notes.push(`${dated ? `This rate is from ${day(S.custom.at)}` : 'This rate was saved earlier'}. Gold rates change every day.`);
   } else {
@@ -162,17 +200,17 @@ function render() {
   }
   const cmp = S.custom && liveRk ? rateOf(rk, src) - liveRk : null;
   $('compare').hidden = cmp == null;
-  $('compare').dataset.dir = cmp >= 1 ? 'up' : cmp <= -1 ? 'down' : '';
+  const cmpPct = cmp != null && liveRk ? (cmp / liveRk) * 100 : 0;
+  $('compare').dataset.dir = cmpPct >= RATE_NOISE_PCT ? 'up' : cmpPct <= -RATE_NOISE_PCT ? 'down' : '';
   if (cmp != null) {
     $('cLabel').textContent = liveState === 'live' ? `Today’s ${rk}K` : `Last live ${rk}K`;
-    $('cLive').textContent = inr(liveRk);
-    $('cMine').textContent = inr(rateOf(rk, src));
-    $('cDiff').innerHTML = Math.abs(cmp) < 1 ? 'Same' : `${cmp > 0 ? '+' : '−'}₹${f0.format(Math.abs(cmp))}<small> ${pct((Math.abs(cmp) / liveRk) * 100)} ${cmp > 0 ? 'more' : 'less'}</small>`;
+    $('cLive').textContent = inr(liveRk * per);
+    $('cDiff').textContent = Math.abs(cmp) < 1 ? 'Same as yours' : `Yours is ${inr(Math.abs(cmp) * per)} ${cmp > 0 ? 'more' : 'less'}`;
   }
   if (rk !== k && rate > 0) notes.push(`For ${k}K gold this works out to <b>${inr(rate)}</b> per g.`);
   $('rateNote').innerHTML = notes.map((n) => `<p>${n}</p>`).join('');
   $('refresh').setAttribute('aria-busy', String(liveState === 'loading'));
-  // Rate board in the hero: today's live rates, whatever rate the calculator is using.
+  // The board always shows live rates, even when a typed rate is in use.
   for (const kk of ['24', '22', '18']) $(`rb${kk}`).textContent = S.live ? inr(Math.round((liveBase() * PURITY[kk]) / 999)) : '—';
   $('boardTime').textContent = !S.live ? (liveState === 'error' ? 'Offline' : 'Loading…') : liveState === 'loading' ? 'Updating…' : liveState === 'live' ? `Live, ${when(S.live.at)}` : `Saved, ${when(S.live.at)}`;
   if (S.live) {
@@ -180,7 +218,6 @@ function render() {
     $('eq').textContent = `World gold price is ${inr(S.live.inrOz)} an ounce, which is ${inr(g)} a gram. Add ${pct(num($('duty')))} import duty and ${inr(num($('premium')))} local premium: ${inr(liveBase())} a gram for 24K. Updated ${when(S.live.at)}.`;
   }
 
-  // Mode
   const budgetMode = mode === 'budget';
   const checkMode = mode === 'check';
   document.documentElement.dataset.mode = mode;
@@ -191,11 +228,10 @@ function render() {
   $('discountField').hidden = checkMode;
   $('old').hidden = checkMode;
 
-  // Making
   const mm = val('makingMode');
   $('makingPre').hidden = mm === 'pct';
   $('makingSuf').textContent = mm === 'pct' ? '%' : mm === 'gram' ? 'per g' : '';
-  let makingHint = MAKING_KEYS[mm].hint;
+  let makingHint = mm === 'pct' ? MAKING_PCT_HINT[bandFor(k)].replaceAll('{k}', `${k}K`) : MAKING_KEYS[mm].hint;
   if (makingMode !== mm) {
     keys($('makingKeys'), MAKING_KEYS[mm].vals, MAKING_KEYS[mm].label);
     makingMode = mm;
@@ -212,7 +248,6 @@ function render() {
   };
   const budget = num($('budget'));
   const final = num($('final'));
-  // The same bill at today's live rate, to show what an overridden rate changes.
   let atLive = null;
   if (cmp != null && Math.abs(cmp) >= 1 && !checkMode) {
     const ls = { k: rk, r: liveRk };
@@ -222,13 +257,25 @@ function render() {
   }
   if (budgetMode) i.gross = maxNet(budget, i) + i.stoneWt;
   const b = bill(i);
-  const maRaw = $('makingAmount').value.trim();
-  const maPct = val('makingUnit') === 'pct';
-  $('maPre').hidden = maPct;
-  const stated = maRaw === '' ? {} : maPct ? { makingPct: num($('makingAmount')) } : { makingAmount: num($('makingAmount')) };
-  const c = checkMode ? fromTotal(final, { ...i, gstAmount: S.gstCustom, ...stated }) : null;
+  // Left empty, the field shows the derived making.
+  const maInPct = val('makingUnit') === 'pct';
+  $('maPre').hidden = maInPct;
+  const stated = S.makingCustom == null ? {} : maInPct ? { makingPct: S.makingCustom } : { makingAmount: S.makingCustom };
+  // Left empty, the field shows the default GST.
+  const gstInPct = val('gstUnit') === 'pct';
+  $('gaPre').hidden = gstInPct;
+  const gstOpt = S.gstCustom == null ? {} : gstInPct ? { gstPct: S.gstCustom } : { gstAmount: S.gstCustom };
+  const c = checkMode ? fromTotal(final, { ...i, ...gstOpt, ...stated }) : null;
+  lastCheck = c;
   const gstEl = $('gstAmount');
-  if (document.activeElement !== gstEl) gstEl.value = S.gstCustom != null ? f2.format(S.gstCustom) : c && final > 0 ? f0.format(c.gst) : '';
+  if (document.activeElement !== gstEl) {
+    gstEl.value = S.gstCustom != null ? f2.format(S.gstCustom) : gstInPct ? f2.format(i.gstPct) : c && final > 0 ? f0.format(c.gst) : '';
+  }
+  const maEl = $('makingAmount');
+  if (document.activeElement !== maEl) {
+    const derived = c && final > 0 && c.gold > 0 && c.making >= 0;
+    maEl.value = S.makingCustom != null ? f2.format(S.makingCustom) : !derived ? '' : maInPct ? f2.format((c.making / c.gold) * 100) : f0.format(c.making);
+  }
 
   if (mm !== 'pct' && b.gold > 0 && i.making > 0) makingHint += ` Here that is ${pct((b.makingFull / b.gold) * 100)} of the gold value.`;
   $('makingHint').textContent = makingHint;
@@ -238,14 +285,13 @@ function render() {
     i.stoneWt && `Stones ${f3.format(i.stoneWt)} g`,
     i.stoneValue && `Stone price ${inr(i.stoneValue)}`,
     i.hallmark && `Hallmark ${inr(i.hallmark)}`,
-    `GST ${pct(i.gstPct)}`,
+    !checkMode && `GST ${pct(i.gstPct)}`,
   ].filter(Boolean).map((x) => x.replace(/ /g, ' ')).join(', ');
   $('oldRateHint').textContent = S.oldCustom != null
     ? `The gold rate above gives ${inr(rateOf(oldK, src))} for ${oldK}K.`
     : `Filled from the gold rate above (${S.custom ? 'your rate' : 'today’s rate'}). Change it if the shop offers a different rate.`;
   $('oldSum').textContent = b.oldValue > 0 ? `${f3.format(i.oldWeight)} g of ${oldK}K, ${inr(-b.oldValue)}` : '';
 
-  // Bill
   const why =
     rate <= 0 ? (checkMode ? 'Add the gold rate from the bill.' : 'Add a gold rate to see your bill.') :
     budgetMode && budget <= 0 ? 'Add your budget to see how much gold you can buy.' :
@@ -263,32 +309,40 @@ function render() {
   $('display').hidden = !ok;
   document.body.classList.toggle('has-bar', ok);
 
-  $('bill-title').textContent = checkMode ? 'The bill, broken down' : 'Your bill';
+  $('bill-title').textContent = checkMode ? 'What’s in this bill' : 'Your bill';
   $('billMeta').textContent = ok ? `${f3.format(b.net)} g of ${k}K` : `${k}K`;
   const goldLine = () => line('', 'Gold', `${f3.format(b.net)} g × ${inr(rate)}${i.stoneWt > 0 ? `, without ${f3.format(i.stoneWt)} g of stones` : ''}`, inr(b.gold));
   let html = '';
-  let facts = '';
+  const facts = [];
   if (ok && checkMode) {
     const mp = (c.making / c.gold) * 100;
     html += goldLine();
     if (c.wastage) html += line('+', 'Wastage', `${pct(i.wastagePct)} of gold`, inr(c.wastage));
-    html += line('+', 'Making charges', `${pct(mp)} of gold, ${inr(c.making / c.net)} per gram${maRaw ? ', from the bill' : ', worked out'}`, inr(c.making));
+    html += line('+', 'Making charges', `${pct(mp)} of gold${S.makingCustom != null ? ', from the bill' : ''}`, inr(c.making));
     if (c.other) html += line(c.other > 0 ? '+' : '−', 'Not explained', 'Left over after gold, making and GST', inr(Math.abs(c.other)), c.other > 0 ? 'flag' : '');
     if (c.stones) html += line('+', 'Stones', '', inr(c.stones));
     if (c.hallmark) html += line('+', 'Hallmark fee', '', inr(c.hallmark));
     html += line('=', 'Price before GST', '', inr(c.taxable), 'sub');
-    html += line('+', `GST ${pct(c.gstPct)}`, S.gstCustom != null ? 'from the bill' : `worked out at ${pct(i.gstPct)}`, inr(c.gst));
-    const [, tone, says] = makingVerdict(mp);
-    facts += `<li class="${tone}">Making charges of <span>${pct(mp)}</span> are ${says}.</li>`;
-    if (c.other > 10) facts += `<li class="bad"><span>${inr(c.other)}</span> of the total isn’t explained by gold, making, stones, hallmark and GST. Ask the shop what it is for.</li>`;
-    if (S.gstCustom === 0) facts += `<li class="bad">This bill has no GST. Jewellery carries 3% GST; ask for a proper GST bill.</li>`;
-    else if (S.gstCustom != null && Math.abs(c.gstPct - 3) > 0.05) facts += `<li class="bad">GST on this bill is <span>${pct(c.gstPct)}</span> of the price. GST on jewellery is 3%.</li>`;
-    facts += `<li>All in, you pay <span>${inr(c.total / c.net)}</span> per gram of gold, ${pct((c.total / c.gold - 1) * 100)} over the gold value.</li>`;
+    html += line('+', `GST ${pct(c.gstPct)}`, S.gstCustom != null ? 'from the bill' : '', inr(c.gst));
+    const [tone, says] = makingVerdict(mp, k);
+    facts.push({ tone, label: 'Making charges', value: pct1(mp), note: sentence(says) });
+    if (c.other > 10) facts.push({ tone: 'bad', label: 'Not explained', value: inr(c.other), note: 'Not covered by gold, making, stones, hallmark or GST. Ask the shop what it is for.' });
+    if (c.other < -10) facts.push({ tone: 'bad', label: 'Doesn’t add up', value: inr(c.other), note: 'The making charge entered is more than the total allows. Check it against the bill.' });
+    if (S.gstCustom === 0) facts.push({ tone: 'bad', label: 'GST', value: 'None', note: 'Jewellery carries 3% GST. Ask for a proper GST bill.' });
+    else if (S.gstCustom != null && Math.abs(c.gstPct - 3) > 0.05) facts.push({ tone: 'bad', label: 'GST', value: pct1(c.gstPct), note: 'GST on jewellery is 3%.' });
     if (S.custom && liveRk && liveState !== 'error') {
-      const d = rate - rateOf(k, { k: rk, r: liveRk });
-      const cost = Math.round(Math.abs(d) * c.net * (1 + i.gstPct / 100));
-      if (Math.abs(d) >= 1) facts += `<li class="${d > 0 ? 'bad' : 'good'}">The shop’s ${k}K rate is <span>${inr(Math.abs(d))}</span> per gram ${d > 0 ? 'above' : 'below'} today’s rate. On this piece that is <span>${inr(cost)}</span> ${d > 0 ? 'more' : 'less'}, GST included.</li>`;
+      const liveK = rateOf(k, { k: rk, r: liveRk });
+      const cost = Math.round((rate - liveK) * c.net * (1 + i.gstPct / 100));
+      const g = rateGap(rate - liveK, liveK, cost);
+      const onPiece = `${inr(Math.abs(cost))} ${cost > 0 ? 'more' : 'less'} on this piece, GST included.`;
+      facts.push(
+        g.level === 'same' ? { tone: '', label: `Shop’s ${k}K rate`, value: 'In line', note: 'Close to today’s rate.' }
+        : g.level === 'below' ? { tone: 'good', label: `Shop’s ${k}K rate`, value: `${pct1(Math.abs(g.gap))} below`, note: `Below today’s rate: ${onPiece}` }
+        : g.level === 'above' ? { tone: '', label: `Shop’s ${k}K rate`, value: `${pct1(g.gap)} above`, note: `A little above today’s rate: ${onPiece}` }
+        : { tone: 'bad', label: `Shop’s ${k}K rate`, value: `${pct1(g.gap)} above`, note: `Well above today’s rate: ${onPiece} Ask which rate the shop is using.` }
+      );
     }
+    facts.push({ tone: '', label: 'All-in price', value: `${inr(c.total / c.net)}/g`, note: `${pct1((c.total / c.gold - 1) * 100)} over the gold value.` });
   } else if (ok) {
     html += goldLine();
     if (b.wastage) html += line('+', 'Wastage', `${pct(i.wastagePct)} of gold`, inr(b.wastage));
@@ -304,15 +358,30 @@ function render() {
       html += line('=', 'Jewellery price', '', inr(b.total), 'sub');
       html += line('−', 'Old gold', `${f3.format(i.oldWeight)} g of ${oldK}K × ${inr(oldRate)}${i.oldDeductPct ? `, less ${pct(i.oldDeductPct)}` : ''}`, inr(b.oldValue));
     }
-    facts = `<li>Cost per gram with all charges: <span>${inr(b.total / b.net)}</span></li>` +
-      `<li>Charges on top of the gold: <span>${pct(((b.making + b.wastage) / b.gold) * 100 || 0)}</span></li>` +
-      (atLive ? (budgetMode
-        ? `<li>At today’s rate you could buy: <span>${f3.format(atLive.net)} g</span></li>`
-        : `<li>At today’s rate this bill would be: <span>${inr(atLive.payable)}</span> (${inr(Math.abs(b.payable - atLive.payable))} ${b.payable > atLive.payable ? 'less' : 'more'})</li>`)
-        : '');
+    facts.push({ tone: '', label: 'All-in price', value: `${inr(b.total / b.net)}/g`, note: 'Gold plus every charge and GST.' });
+    facts.push({ tone: '', label: 'Charges on top of gold', value: pct1(((b.making + b.wastage) / b.gold) * 100 || 0), note: 'Making and wastage, as a share of the gold value.' });
+    if (atLive && rateGap(cmp, liveRk, budgetMode ? (atLive.net - b.net) * rate : b.payable - atLive.payable).level !== 'same') {
+      facts.push(budgetMode
+        ? { tone: '', label: 'At today’s rate', value: `${f3.format(atLive.net)} g`, note: 'What the same budget buys at today’s live rate.' }
+        : { tone: '', label: 'At today’s rate', value: inr(atLive.payable), note: `${inr(Math.abs(b.payable - atLive.payable))} ${b.payable > atLive.payable ? 'less' : 'more'} than with your rate.` });
+    }
   }
   $('lines').innerHTML = html;
-  $('facts').innerHTML = facts;
+  if (ok) {
+    const net = checkMode ? c.net : b.net;
+    const paid = checkMode ? c.total : b.total;
+    // Buyback pays for gold only, less 2-5%.
+    const resale = Math.round(net * (liveRk ? rateOf(k, { k: rk, r: liveRk }) : rate) * (1 - BUYBACK_CUT));
+    if (resale > 0 && paid > resale) facts.push({ tone: '', label: 'If sold back today', value: `about ${inr(resale)}`, note: `${inr(paid - resale)} less than you pay: making charges and GST aren’t returned, and shops usually deduct 2% to 5%.` });
+    if (i.stoneValue > 0 && i.stoneWt <= 0) facts.push({ tone: 'bad', label: 'Stone weight', value: 'Not entered', note: 'Stones are priced but no stone weight is entered. Check that the bill takes the stone weight off before charging the gold rate.' });
+  }
+  const rank = { bad: 0, good: 1, '': 1 };
+  $('facts').innerHTML = facts
+    .map((f, n) => ({ ...f, n }))
+    .sort((x, y) => rank[x.tone] - rank[y.tone] || x.n - y.n)
+    .map((f) => `<li class="fact ${f.tone}"><span class="f-label">${f.label}</span><b class="f-value">${f.value}</b><span class="f-note">${f.note}</span></li>`)
+    .join('');
+  $('factsTitle').hidden = !facts.length;
 
   const payable = checkMode ? c.total : b.payable;
   const refund = ok && payable < -0.5;
@@ -321,45 +390,44 @@ function render() {
   $('gTotal').textContent = inr(ok ? Math.abs(payable) : 0);
 
   $('tLabel').textContent = budgetMode ? 'You can buy' : checkMode ? 'Making charges in this bill' : payLabel;
-  $('total').textContent = !ok ? '' : budgetMode ? `${f3.format(b.net)} g` : checkMode ? `${pct((c.making / c.gold) * 100)}` : inr(Math.abs(b.payable));
+  $('total').textContent = !ok ? '' : budgetMode ? `${f3.format(b.net)} g` : checkMode ? pct((c.making / c.gold) * 100) : inr(Math.abs(b.payable));
+  $('amount').textContent = ok && checkMode ? inr(c.making) : '';
   $('words').textContent = !ok ? '' : budgetMode
     ? `of ${k}K gold for ${inr(b.payable)}`
     : checkMode
-      ? `of the gold value: ${inr(c.making)} in all, ${inr(c.making / c.net)} per gram`
+      ? `of the gold value of ${inr(c.gold)}`
       : [`${f3.format(b.net)} g of ${k}K`, lakh(Math.abs(b.payable)) && `${lakh(Math.abs(b.payable))} rupees`].filter(Boolean).join(', ');
 
   $('pan').hidden = !(ok && (checkMode ? c.total : b.total) >= 200000);
   $('share').disabled = !ok;
 
   last = ok ? { b, k, src, payable, net: checkMode ? c.net : b.net } : null;
+  writeUrl();
   scrollers.forEach(fade);
 }
 
-// Editing a shared bill makes it the visitor's own saved bill.
-function claim() {
-  if (!viewingShared) return;
-  viewingShared = false;
-  if (S.custom) S.custom.shared = false;
-  $('shared').hidden = true;
-  history.replaceState(null, '', location.pathname + location.search);
-}
-
 function persist() {
-  claim();
   S.f = gather();
   save();
 }
 
-// Inputs
 form.addEventListener('input', (e) => {
   const el = e.target;
+  // Convert before render, which would read the old value in the new unit.
+  if (el.name === 'gstUnit' && S.gstCustom != null && lastCheck) {
+    S.gstCustom = el.value === 'pct' ? lastCheck.gstPct : lastCheck.gst;
+  }
+  if (el.name === 'makingUnit' && S.makingCustom != null && lastCheck?.gold > 0) {
+    S.makingCustom = el.value === 'pct' ? (lastCheck.making / lastCheck.gold) * 100 : lastCheck.making;
+  }
   if (el.inputMode === 'decimal' || el.inputMode === 'numeric') {
     const clean = el.value.replace(el.inputMode === 'numeric' ? /[^\d,]/g : /[^\d.,]/g, '');
     if (clean !== el.value) el.value = clean;
   }
-  if (el.id === 'rate') S.custom = el.value.trim() ? { k: val('rateK'), rate: num(el), at: Date.now() } : null;
+  if (el.id === 'rate') S.custom = el.value.trim() ? { k: val('rateK'), rate: num(el) / (Number(val('rateUnit')) || 1), at: Date.now() } : null;
   if (el.id === 'oldRate') S.oldCustom = el.value.trim() ? num(el) : null;
   if (el.id === 'gstAmount') S.gstCustom = el.value.trim() ? num(el) : null;
+  if (el.id === 'makingAmount') S.makingCustom = el.value.trim() ? num(el) : null;
   persist();
   render();
 });
@@ -393,16 +461,13 @@ form.addEventListener('keydown', (e) => {
   next ? next.focus() : e.target.blur();
 });
 
-$('useLive').onclick = () => { claim(); S.custom = null; save(); render(); };
-$('oldUseLive').onclick = () => { claim(); S.oldCustom = null; save(); render(); };
-$('mine').onclick = () => { history.replaceState(null, '', location.pathname + location.search); location.reload(); };
+$('useLive').onclick = () => { S.custom = null; save(); render(); };
+$('oldUseLive').onclick = () => { S.oldCustom = null; save(); render(); };
 
-// Clear all asks first, then resets everything except the remembered choices.
 const confirmBox = $('confirm');
 $('reset').onclick = () => { confirmBox.returnValue = ''; confirmBox.showModal(); };
 confirmBox.addEventListener('close', () => {
   if (confirmBox.returnValue !== 'clear') return;
-  claim();
   apply({ ...DEFAULTS, ...pick(gather()) });
   S = { f: pick(gather()), live: S.live };
   save();
@@ -435,38 +500,55 @@ async function refresh() {
   render();
 }
 $('refresh').onclick = refresh;
-// Coming back to the tab after a while fetches a fresh rate.
-// The live rate is cached for 10 minutes; the refresh button always fetches.
+// Live rate is cached for 10 minutes; returning to the tab after that refetches.
 const FRESH = 10 * 60 * 1000;
 const stale = () => Date.now() - (S.live?.fetched || 0) > FRESH;
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && stale()) refresh();
 });
 
-// Share: a link that rebuilds this exact bill, rate included.
-function shareLink() {
+// Live rates stay out of the URL so a reload or shared link gets the latest.
+function stateParams() {
   const f = gather();
   const p = [];
-  const budgetMode = f.mode === 'budget';
+  if (f.mode !== DEFAULTS.mode) p.push(`m=${f.mode}`);
   for (const [name, key] of Object.entries(SHORT)) {
     const v = f[name].replace(/,/g, '');
-    const checkOnly = name === 'final';
-    if (!digits(v) || v === DEFAULTS[name] || (name === 'gross' && budgetMode) || (name === 'budget' && !budgetMode) || (checkOnly && f.mode !== 'check')) continue;
+    if (!digits(v) || v === DEFAULTS[name] || (name === 'gross' && f.mode === 'budget') || (name === 'budget' && f.mode !== 'budget') || (name === 'final' && f.mode !== 'check')) continue;
     p.push(`${key}=${v}`);
   }
   const mk = f.making.replace(/,/g, '');
-  if (digits(mk) && (mk !== DEFAULTS.making || f.makingMode !== 'pct')) p.push(`mk=${mk}${MODE_SUFFIX[f.makingMode]}`);
-  p.push(`r=${last.src.r}${last.src.k === '22' ? '' : `-${last.src.k}`}`);
-  if (S.oldCustom != null) p.push(`or=${S.oldCustom}`);
-  if (f.mode === 'check') {
-    if (S.gstCustom != null) p.push(`ga=${S.gstCustom}`);
-    const ma = f.makingAmount.replace(/,/g, '');
-    if (digits(ma)) p.push(`ma=${ma}${f.makingUnit === 'rs' ? 'r' : ''}`);
+  if (f.mode !== 'check' && digits(mk) && (mk !== DEFAULTS.making || f.makingMode !== 'pct')) p.push(`mk=${mk}${MODE_SUFFIX[f.makingMode]}`);
+  const src = source();
+  if (S.custom && src.r > 0) {
+    p.push(`r=${src.r}${src.k === '22' ? '' : `-${src.k}`}`);
+    p.push(`d=${yymmdd(S.custom?.at || S.live?.at || Date.now())}`);
   }
-  const d = new Date(S.custom?.at || S.live?.at || Date.now());
-  p.push(`d=${String(d.getFullYear() % 100).padStart(2, '0')}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`);
-  return `${location.origin}${location.pathname}#${p.join('&')}`;
+  if (S.oldCustom != null && f.mode !== 'check') p.push(`or=${S.oldCustom}`);
+  if (f.mode === 'check') {
+    if (S.gstCustom != null) p.push(`${f.gstUnit === 'rs' ? 'ga' : 'gp'}=${+S.gstCustom.toFixed(4)}`);
+    else if (f.gstUnit === 'rs') p.push('gu=rs');
+    if (S.makingCustom != null) p.push(`ma=${+S.makingCustom.toFixed(4)}${f.makingUnit === 'rs' ? 'r' : ''}`);
+    else if (f.makingUnit === 'rs') p.push('mu=rs');
+  }
+  return p.join('&');
 }
+
+// Keep the address bar current. Debounced: Safari rejects more than 100 replaceState calls in 30 s.
+let urlTimer;
+function flushUrl() {
+  clearTimeout(urlTimer);
+  const q = stateParams();
+  const anchor = /^#(help|h-[\w-]+|bill|form)$/.test(location.hash) ? location.hash : '';
+  const next = `${location.pathname}${q ? `?${q}` : ''}${anchor}`;
+  if (next !== location.pathname + location.search + location.hash) history.replaceState(null, '', next);
+}
+function writeUrl() {
+  clearTimeout(urlTimer);
+  urlTimer = setTimeout(flushUrl, 300);
+}
+
+const shareLink = () => { flushUrl(); return location.href.split('#')[0]; };
 
 $('share').onclick = async () => {
   if (!last) return;
@@ -485,23 +567,19 @@ $('share').onclick = async () => {
   setTimeout(() => (btn.textContent = 'Share bill'), 1800);
 };
 
-// Hero buttons switch mode and jump to the rate, where both flows start.
-for (const b of document.querySelectorAll('[data-goto]')) {
-  b.addEventListener('click', () => {
-    form.querySelector(`input[name=mode][value=${b.dataset.goto}]`).click();
-    document.querySelector('.mode-wrap').scrollIntoView({ block: 'start' });
-    if (b.dataset.goto === 'check') $('rate').focus({ preventScroll: true });
+// One FAQ topic open at a time. <details name> does this natively; this covers older browsers.
+for (const d of document.querySelectorAll('details.topic')) {
+  d.addEventListener('toggle', () => {
+    if (d.open) for (const o of document.querySelectorAll('details.topic[open]')) if (o !== d) o.open = false;
   });
 }
 
-// Help links open their topic.
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#h-"], a[href="#help"]');
   const t = a && document.querySelector(a.getAttribute('href'));
   if (t?.tagName === 'DETAILS') t.open = true;
 });
 
-// Theme
 const root = document.documentElement;
 const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
 const themeLabel = () => $('theme').setAttribute('aria-label', isDark() ? 'Switch to light mode' : 'Switch to dark mode');
@@ -519,11 +597,10 @@ const pin = () => out.style.setProperty('--out-top', `${Math.min(24, innerHeight
 new ResizeObserver(pin).observe(out);
 addEventListener('resize', pin);
 
-// On touch screens the result bar steps aside while a field has focus, so it stays behind the keyboard.
+// Hide the result bar behind the on-screen keyboard.
 document.addEventListener('focusin', (e) => { if (matchMedia('(pointer: coarse)').matches && e.target.matches('input[inputmode]')) document.body.classList.add('typing'); });
 document.addEventListener('focusout', () => document.body.classList.remove('typing'));
 
-// Preset rows fade at whichever edge has more to scroll.
 const scrollers = [...document.querySelectorAll('.presets, .rate-for')];
 const fade = (el) => {
   el.style.setProperty('--fl', el.scrollLeft > 1 ? '28px' : '0px');
@@ -533,5 +610,6 @@ for (const el of scrollers) el.addEventListener('scroll', () => fade(el), { pass
 new ResizeObserver(() => scrollers.forEach(fade)).observe(form);
 
 if (!stale()) liveState = 'live';
+$('year').textContent = new Date().getFullYear();
 render();
 if (stale()) refresh();

@@ -5,7 +5,7 @@ export const PURITY = { 24: 999, 22: 916, 20: 833, 18: 750, 14: 585, 9: 375 };
 
 export const rateFor = (base999, k) => (base999 * PURITY[k]) / 999;
 
-// Indian landed rate: international spot plus customs duty plus local premium. Excludes GST, like board rates.
+// Excludes GST, like shop board rates.
 export const landed = (inrPerOz, dutyPct, premium) => (inrPerOz / OZ) * (1 + dutyPct / 100) + premium;
 
 const n = (v) => (Number.isFinite(v) && v > 0 ? v : 0);
@@ -44,10 +44,8 @@ export function maxNet(budget, i) {
   return mg > 0 && fits(mg) ? mg / 1000 : 0;
 }
 
-// Reverse of bill(): split a jeweller's final total (with GST) into its parts. GST and making
-// (as an amount or a % of gold) come from the bill when given, 0 included; otherwise GST is gstPct of the price before GST and making is
-// whatever is left after gold, wastage, stones and hallmark. Anything the stated making doesn't
-// cover is `other`.
+// Reverse of bill(). GST and making stated on the bill win (0 included); otherwise GST is gstPct
+// and making is the remainder. What stated making leaves unexplained is `other`.
 export function fromTotal(total, i) {
   const net = Math.max(0, n(i.gross) - n(i.stoneWt));
   const gold = r(net * n(i.rate));
