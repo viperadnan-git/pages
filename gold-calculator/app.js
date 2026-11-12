@@ -80,7 +80,8 @@ const makingVerdict = (p, k) => {
 const RATE_NOISE_PCT = 1,
   RATE_FLAG_PCT = 3,
   RATE_NOISE_RS = 500;
-const BUYBACK_CUT = 0.03;
+// Jewellery below 24K is bought back at 2-5% under the gold value; 24K coins and bars at about the gold value.
+const buybackCut = (k) => (k === '24' ? 0 : 0.03);
 function rateGap(diff, live, impact) {
   const gap = live > 0 ? (diff / live) * 100 : 0;
   if (Math.abs(gap) < RATE_NOISE_PCT || Math.abs(impact) < RATE_NOISE_RS) return { level: 'same', gap };
@@ -452,12 +453,14 @@ function render() {
   syncBar();
 
   $('bill-title').textContent = checkMode ? 'What’s in this bill' : 'Your bill';
-  $('billMeta').textContent = ok ? `${f3.format(b.net)} g of ${k}K` : `${k}K`;
+  // The bill shows the rate in the unit it was entered in.
+  const rateText = per === 10 ? `${inr(rate * 10)}/10g` : `${inr(rate)}/g`;
+  $('billMeta').textContent = ok ? `${f3.format(b.net)} g of ${k}K at ${rateText}` : `${k}K`;
   const goldLine = () =>
     line(
       '',
       'Gold',
-      `${f3.format(b.net)} g × ${inr(rate)}${i.stoneWt > 0 ? `, without ${f3.format(i.stoneWt)} g of stones` : ''}`,
+      `${f3.format(b.net)} g × ${rateText}${i.stoneWt > 0 ? `, without ${f3.format(i.stoneWt)} g of stones` : ''}`,
       inr(b.gold),
     );
   let html = '';
@@ -602,14 +605,16 @@ function render() {
   if (ok) {
     const net = checkMode ? c.net : b.net;
     const paid = checkMode ? c.total : b.total;
-    // Buyback pays for gold only, less 2-5%.
-    const resale = Math.round(net * (liveRk ? rateOf(k, { k: rk, r: liveRk }) : rate) * (1 - BUYBACK_CUT));
+    const resale = Math.round(net * (liveRk ? rateOf(k, { k: rk, r: liveRk }) : rate) * (1 - buybackCut(k)));
     if (resale > 0 && paid > resale)
       facts.push({
         tone: '',
         label: 'If sold back today',
         value: `about ${inr(resale)}`,
-        note: `${inr(paid - resale)} less than you pay: making charges and GST aren’t returned, and shops usually deduct 2% to 5%.`,
+        note:
+          k === '24'
+            ? `${inr(paid - resale)} less than you pay: making charges and GST aren’t returned. 24K coins and bars sell back at about the gold value.`
+            : `${inr(paid - resale)} less than you pay: making charges and GST aren’t returned, and shops usually deduct 2% to 5%.`,
       });
     if (i.stoneValue > 0 && i.stoneWt <= 0)
       facts.push({
@@ -657,9 +662,11 @@ function render() {
 
   $('pan').hidden = !(ok && (checkMode ? c.total : b.total) >= 200000);
   $('share').disabled = !ok;
+  $('download').disabled = !ok;
 
   last = ok ? { b, k, src, payable, net: checkMode ? c.net : b.net } : null;
   writeUrl();
+  prepareBillImage();
   scrollers.forEach(fade);
 }
 
@@ -831,30 +838,222 @@ function writeUrl() {
 
 const shareLink = () => {
   flushUrl();
-  return location.href.split('#')[0];
+  return `${location.href.split('#')[0]}#bill`;
 };
 
+const flash = (btn, msg, rest) => {
+  btn.textContent = msg;
+  setTimeout(() => (btn.textContent = rest), 1800);
+};
+
+// Touch devices that can share files get the image with a caption; everything else gets the link.
 $('share').onclick = async () => {
   if (!last) return;
   const { k, payable, net } = last;
   const url = shareLink();
-  const text = `Gold bill: ${f3.format(net)} g of ${k}K, ${payable < -0.5 ? 'shop pays' : 'total'} ${inr(Math.abs(payable))}`;
+  const caption = `Gold bill: ${f3.format(net)} g of ${k}K, ${payable < -0.5 ? 'shop pays' : 'total'} ${inr(Math.abs(payable))}`;
   const btn = $('share');
   try {
-    if (navigator.share && matchMedia('(pointer: coarse)').matches)
-      return await navigator.share({ title: 'Gold bill', text, url });
+    const file = billFile();
+    const touch = matchMedia('(pointer: coarse)').matches;
+    if (touch && navigator.share && file && navigator.canShare?.({ files: [file] }))
+      return await navigator.share({ files: [file], title: 'Gold bill', text: `${caption}\n${url}` });
+    if (touch && navigator.share) return await navigator.share({ title: 'Gold bill', text: caption, url });
     await navigator.clipboard.writeText(url);
-    btn.textContent = 'Link copied';
+    flash(btn, 'Link copied', 'Share bill');
   } catch (err) {
     if (err?.name === 'AbortError') return;
     try {
       await navigator.clipboard.writeText(url);
-      btn.textContent = 'Link copied';
+      flash(btn, 'Link copied', 'Share bill');
     } catch {
-      btn.textContent = 'Couldn’t share. Try again';
+      flash(btn, 'Couldn’t share. Try again', 'Share bill');
     }
   }
-  setTimeout(() => (btn.textContent = 'Share bill'), 1800);
+};
+
+// The bill as a PNG, drawn from the rendered bill so it always matches the page. Two passes:
+// the first measures the height, the second paints.
+async function billPng() {
+  flushUrl();
+  const billUrl = location.href.split('#')[0];
+  const day = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  await Promise.all(['400 40px Anton', '500 30px "DM Sans"'].map((f) => document.fonts.load(f)));
+  // The page's own colour tokens, so the image follows the current theme. A probe element turns
+  // each into a colour string any canvas accepts.
+  const probe = document.body.appendChild(document.createElement('i'));
+  const token = (name) => ((probe.style.color = `var(--${name})`), getComputedStyle(probe).color);
+  const C = {
+    canvas: token('canvas'),
+    card: token('card'),
+    ink: token('ink'),
+    muted: token('muted'),
+    dots: token('dots'),
+    bad: token('bad-ink'),
+    badBg: token('bad-soft'),
+    good: token('good-ink'),
+    goodBg: token('good-soft'),
+  };
+  probe.remove();
+  const W = 1080,
+    M = 48,
+    P = 56,
+    L = M + P,
+    R = W - M - P;
+  const sans = (size) => `500 ${size}px "DM Sans", sans-serif`;
+  const display = (size) => `400 ${size}px Anton, sans-serif`;
+  const rows = [...$('lines').children].map((d) => ({
+    op: d.querySelector('.op').textContent,
+    label: d.querySelector('dt').childNodes[0].textContent,
+    sub: d.querySelector('dt small')?.textContent || '',
+    amount: d.querySelector('dd').textContent,
+    rule: d.classList.contains('sub'),
+    flag: d.classList.contains('flag'),
+  }));
+  const facts = [...document.querySelectorAll('#facts .fact')].map((li) => ({
+    tone: li.classList.contains('bad') ? 'bad' : li.classList.contains('good') ? 'good' : '',
+    label: li.querySelector('.f-label').textContent,
+    value: li.querySelector('.f-value').textContent,
+    note: li.querySelector('.f-note').textContent,
+  }));
+  const cv = document.createElement('canvas');
+  const x = cv.getContext('2d');
+  let card = null;
+  const paintAll = (paint) => {
+    const text = (t, X, Y, font, color, align = 'left') => {
+      if (!paint) return;
+      x.font = font;
+      x.fillStyle = color;
+      x.textAlign = align;
+      x.fillText(t, X, Y);
+    };
+    const width = (t, font) => ((x.font = font), x.measureText(t).width);
+    const wrap = (t, w, font) => {
+      const out = [];
+      let line = '';
+      for (const word of t.split(' ')) {
+        const next = line ? `${line} ${word}` : word;
+        if (line && width(next, font) > w) out.push(line), (line = word);
+        else line = next;
+      }
+      return line ? [...out, line] : out;
+    };
+    const box = (X, Y, w, h, r, color) => {
+      if (!paint) return;
+      x.fillStyle = color;
+      x.beginPath();
+      x.roundRect(X, Y, w, h, r);
+      x.fill();
+    };
+    const rule = (Y) => {
+      if (!paint) return;
+      x.strokeStyle = C.dots;
+      x.lineWidth = 3;
+      x.setLineDash([3, 7]);
+      x.beginPath();
+      x.moveTo(L, Y);
+      x.lineTo(R, Y);
+      x.stroke();
+      x.setLineDash([]);
+    };
+    if (paint) (x.fillStyle = C.canvas), x.fillRect(0, 0, W, cv.height);
+    let y = M;
+    // Bill card
+    const cardTop = y;
+    if (paint) box(M, card.top, W - 2 * M, card.height, 44, C.card);
+    y += P;
+    const heading = { check: 'Bill check', price: 'Price estimate', budget: 'Budget estimate' }[val('mode')];
+    text(heading, L, y + 50, display(56), C.ink);
+    text(day, R, y + 46, sans(30), C.ink, 'right');
+    text($('billMeta').textContent, L, y + 98, sans(28), C.muted);
+    y += 140;
+    for (const r of rows) {
+      if (r.rule) rule(y), (y += 26);
+      const subs = r.sub ? wrap(r.sub, R - L - 260, sans(24)) : [];
+      const color = r.flag ? C.bad : C.ink;
+      text(r.op, L + 12, y + 32, sans(32), C.muted, 'center');
+      text(r.label, L + 52, y + 32, sans(32), color);
+      text(r.amount, R, y + 32, sans(32), color, 'right');
+      subs.forEach((s, n) => text(s, L + 52, y + 72 + n * 32, sans(24), C.muted));
+      y += 52 + subs.length * 32 + 14;
+    }
+    rule(y);
+    y += 30;
+    text('=', L + 12, y + 50, sans(40), C.ink, 'center');
+    text($('gLabel').textContent, L + 52, y + 48, sans(32), C.ink);
+    text($('gTotal').textContent, R, y + 56, display(68), C.ink, 'right');
+    y += 96;
+    if (facts.length) {
+      text('At a glance', L, y + 26, sans(24), C.muted);
+      y += 44;
+      facts.forEach((f, n) => {
+        if (n) rule(y);
+        y += 22;
+        const vw = width(f.value, sans(28)) + (f.tone ? 36 : 0);
+        if (f.tone) box(R - vw, y, vw, 46, 23, f.tone === 'bad' ? C.badBg : C.goodBg);
+        text(f.label, L, y + 34, sans(30), C.ink);
+        text(
+          f.value,
+          f.tone ? R - 18 : R,
+          y + 34,
+          sans(28),
+          f.tone === 'bad' ? C.bad : f.tone === 'good' ? C.good : C.ink,
+          'right',
+        );
+        const notes = wrap(f.note, R - L, sans(24));
+        notes.forEach((s, i) => text(s, L, y + 80 + i * 32, sans(24), C.muted));
+        y += 58 + notes.length * 32 + 14;
+      });
+    }
+    y += P - 14;
+    card = { top: cardTop, height: y - cardTop };
+    y += 40;
+    // The bill's own link, wrapped by character: it has no spaces to break on.
+    text('Open this bill', L, y, sans(24), C.muted);
+    let line = '';
+    const urlLines = [];
+    for (const ch of billUrl) {
+      if (line && width(line + ch, sans(24)) > R - L) urlLines.push(line), (line = ch);
+      else line += ch;
+    }
+    urlLines.push(line);
+    urlLines.forEach((u, n) => text(u, L, y + 38 + n * 32, sans(24), C.ink));
+    y += 38 + (urlLines.length - 1) * 32;
+    return y + M;
+  };
+  cv.width = W;
+  cv.height = paintAll(false);
+  paintAll(true);
+  return new Promise((r) => cv.toBlob(r, 'image/png'));
+}
+
+// Safari only allows navigator.share right after the tap, so the image is drawn ahead of time,
+// shortly after the bill settles, and redrawn only when the bill changes.
+const billName = () => `gold-bill-${new Date().toLocaleDateString('en-CA')}.png`;
+const billKey = () =>
+  [isDark(), val('mode'), ...['lines', 'gTotal', 'facts', 'billMeta'].map((i) => $(i).textContent)].join('|');
+let png = { key: '', blob: null };
+let pngTimer;
+function prepareBillImage() {
+  clearTimeout(pngTimer);
+  if (!last) return;
+  pngTimer = setTimeout(async () => {
+    const key = billKey();
+    if (key !== png.key) png = { key, blob: await billPng() };
+  }, 600);
+}
+const billFile = () =>
+  png.blob && png.key === billKey() ? new File([png.blob], billName(), { type: 'image/png' }) : null;
+
+$('download').onclick = async () => {
+  if (!last) return;
+  const blob = png.key === billKey() && png.blob ? png.blob : await billPng();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = billName();
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  flash($('download'), 'Downloaded', 'Download bill');
 };
 
 // One FAQ topic open at a time. <details name> does this natively; this covers older browsers.
@@ -876,10 +1075,12 @@ const isDark = () =>
 const themeLabel = () =>
   $('theme').setAttribute('aria-label', isDark() ? 'Switch to light mode' : 'Switch to dark mode');
 themeLabel();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', prepareBillImage);
 $('theme').onclick = () => {
   const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
   root.dataset.theme = dark ? 'light' : 'dark';
   themeLabel();
+  prepareBillImage();
   try {
     localStorage.setItem('theme', root.dataset.theme);
   } catch {}
@@ -964,4 +1165,12 @@ new ResizeObserver(() => scrollers.forEach(fade)).observe(form);
 if (!stale()) liveState = 'live';
 $('year').textContent = new Date().getFullYear();
 render();
+// A shared link (#bill) opens at the bill; again once web fonts settle, unless the reader has moved.
+if (location.hash === '#bill' && last) {
+  const target = phone.matches ? $('bill') : document.querySelector('.out');
+  const toBillTop = () => target.scrollIntoView({ block: 'start', behavior: 'instant' });
+  toBillTop();
+  const landed = scrollY;
+  document.fonts.ready.then(() => Math.abs(scrollY - landed) < 4 && toBillTop());
+}
 if (stale()) refresh();

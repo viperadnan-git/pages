@@ -174,7 +174,7 @@
             "name": "Trading in old gold",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Most jewellers let you exchange old gold for new jewellery. Its value comes off your bill:\nOld gold value = weight × rate per gram × (1 − melting loss)\nWeight: weigh it without stones.\nGold type: the shop tests the purity. Old pieces without a hallmark may test lower than you expect.\nRate the shop gives you: filled from the gold rate you are using (yours or today’s) for that karat. Change it to what the shop offers.\nMelting loss: some shops cut a few percent for loss when melting. Ask before you agree.\nIf your old gold is worth more than the new piece, the result shows what the shop pays you.\nSelling a piece back works the same way: shops pay only for the gold, usually less 2% to 5%. Making charges and GST aren’t returned. The bill shows an estimate under If sold back today."
+              "text": "Most jewellers let you exchange old gold for new jewellery. Its value comes off your bill:\nOld gold value = weight × rate per gram × (1 − melting loss)\nWeight: weigh it without stones.\nGold type: the shop tests the purity. Old pieces without a hallmark may test lower than you expect.\nRate the shop gives you: filled from the gold rate you are using (yours or today’s) for that karat. Change it to what the shop offers.\nMelting loss: some shops cut a few percent for loss when melting. Ask before you agree.\nIf your old gold is worth more than the new piece, the result shows what the shop pays you.\nSelling a piece back works the same way: shops pay only for the gold. Jewellery below 24K usually sells back at 2% to 5% under the gold value; 24K coins and bars at about the gold value. Making charges and GST aren’t returned. The bill shows an estimate under If sold back today."
             }
           },
           {
@@ -190,7 +190,7 @@
             "name": "Saving and sharing a gold bill",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The address bar always holds your bill, so reloading keeps it and you can bookmark it. A rate you typed is kept; today’s live rate isn’t, so a reload gets the latest.\nShare bill shares that same address. On a fresh visit the calculator remembers your gold type, rate karat and mode. Nothing you enter is sent anywhere."
+              "text": "The address bar always holds your bill, so reloading keeps it and you can bookmark it. A rate you typed is kept; today’s live rate isn’t, so a reload gets the latest.\nShare bill sends the bill as a picture with a link that opens straight at it, where your device can share pictures; otherwise it shares or copies the link. Download bill saves the picture.\nOn a fresh visit the calculator remembers your gold type, rate karat and mode. Nothing you enter is sent anywhere."
             }
           }
         ]
@@ -1018,7 +1018,7 @@
         min-height: 68px;
       }
       .field.big input {
-        font: 400 34px/1 var(--display);
+        font: 400 clamp(24px, 8vw, 34px) / 1 var(--display);
         letter-spacing: 0.02em;
       }
       .field.big .pre,
@@ -1064,7 +1064,7 @@
         font-size: 18px;
       }
       .f .field.big input {
-        font-size: 34px;
+        font-size: clamp(24px, 8vw, 34px);
       }
 
       .tag {
@@ -1552,12 +1552,14 @@
         gap: 8px;
         flex-wrap: wrap;
       }
+      /* Primary is gold; every other button is a filled secondary, never an outline. */
       .btn {
         min-height: 48px;
-        padding: 12px 24px;
+        padding: 12px 18px;
+        white-space: nowrap;
         border-radius: var(--r-pill);
-        border: 1.5px solid var(--ink);
-        background: transparent;
+        border: 0;
+        background: var(--field);
         color: var(--ink);
         font-size: 16px;
         transition:
@@ -1567,37 +1569,40 @@
       }
       @media (hover: hover) {
         .btn:hover {
-          background: var(--ink);
-          color: var(--card);
+          background: color-mix(in srgb, var(--field) 85%, var(--ink));
         }
       }
       .btn:active {
         transform: scale(0.97);
       }
+      #bill .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      #bill .actions .btn-primary {
+        grid-column: 1 / -1;
+      }
+      @media (max-width: 359px) {
+        #bill .actions {
+          grid-template-columns: 1fr;
+        }
+      }
       .btn-primary {
         background: var(--gold);
         color: var(--on-gold);
-        border-color: var(--gold);
         flex: 1;
       }
       @media (hover: hover) {
         .btn-primary:hover {
-          background: var(--ink);
-          border-color: var(--ink);
-          color: var(--card);
+          background: color-mix(in srgb, var(--gold) 85%, var(--ink));
         }
       }
       .btn:disabled {
         opacity: 0.45;
         cursor: not-allowed;
+        pointer-events: none;
         transform: none;
-      }
-      @media (hover: hover) {
-        .btn:disabled:hover {
-          background: var(--gold);
-          color: var(--on-gold);
-          border-color: var(--gold);
-        }
       }
 
       .guide {
@@ -2279,6 +2284,7 @@
             </p>
             <div class="actions">
               <button class="btn btn-primary" type="button" id="share">Share bill</button>
+              <button class="btn" type="button" id="download">Download bill</button>
               <button class="btn" type="button" id="reset">Clear all</button>
             </div>
           </section>
@@ -2578,8 +2584,9 @@
             </ul>
             <p>If your old gold is worth more than the new piece, the result shows what the shop pays you.</p>
             <p>
-              Selling a piece back works the same way: shops pay only for the gold, usually less 2% to 5%. Making
-              charges and GST aren’t returned. The bill shows an estimate under <b>If sold back today</b>.
+              Selling a piece back works the same way: shops pay only for the gold. Jewellery below 24K usually sells
+              back at 2% to 5% under the gold value; 24K coins and bars at about the gold value. Making charges and GST
+              aren’t returned. The bill shows an estimate under <b>If sold back today</b>.
             </p>
           </div>
         </details>
@@ -2610,8 +2617,12 @@
               kept; today’s live rate isn’t, so a reload gets the latest.
             </p>
             <p>
-              <b>Share bill</b> shares that same address. On a fresh visit the calculator remembers your gold type, rate
-              karat and mode. Nothing you enter is sent anywhere.
+              <b>Share bill</b> sends the bill as a picture with a link that opens straight at it, where your device can
+              share pictures; otherwise it shares or copies the link. <b>Download bill</b> saves the picture.
+            </p>
+            <p>
+              On a fresh visit the calculator remembers your gold type, rate karat and mode. Nothing you enter is sent
+              anywhere.
             </p>
           </div>
         </details>
